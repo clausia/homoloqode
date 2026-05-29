@@ -16,35 +16,35 @@ The project is currently in a preparation and prototyping phase.
 
 The initial goals of **homoloQode** are:
 
-* Represent simple cell complexes or surface-like graphs using combinatorial data.
-* Construct boundary maps over $\mathbb{F}_2)$.
-* Verify the chain-complex condition $\partial_1 \partial_2 = 0$.
-* Translate boundary maps into CSS check matrices $H_X$ and $H_Z$.
-* Verify the CSS commutation condition $H_X H_Z^T = 0 \pmod 2$.
-* Identify candidate logical operators through cycles, boundaries, and homology classes.
-* Simulate simple Pauli errors and compute syndromes.
-* Implement small decoding experiments for selected examples.
-* Provide clear notebooks, tests, and documentation.
+* Represent simple cell complexes or surface-like graphs using combinatorial data
+* Construct boundary maps over $\mathbb{F}_2)$
+* Verify the chain-complex condition $\partial_1 \partial_2 = 0$
+* Translate boundary maps into CSS check matrices $H_X$ and $H_Z$
+* Verify the CSS commutation condition $H_X H_Z^T = 0 \pmod 2$
+* Identify candidate logical operators through cycles, boundaries, and homology classes
+* Simulate simple Pauli errors and compute syndromes
+* Implement small decoding experiments for selected examples
+* Provide clear notebooks, tests, and documentation
 
 ## Initial scope
 
 The first target example will likely be a small toric code constructed from boundary maps. This provides a clean starting point because it directly connects:
 
-* a two-dimensional cell complex,
-* boundary maps,
-* homology classes,
-* CSS stabilizer checks,
-* logical operators,
-* syndromes,
-* and decoding intuition.
+* a two-dimensional cell complex
+* boundary maps
+* homology classes
+* CSS stabilizer checks
+* logical operators
+* syndromes
+* and decoding intuition
 
 Possible later extensions include:
 
-* planar surface codes with boundaries,
-* relative homology,
-* visualization of lattices and logical operators,
-* simple noise and decoding experiments,
-* integration with Qiskit, Stim, or PyMatching.
+* planar surface codes with boundaries
+* relative homology
+* visualization of lattices and logical operators
+* simple noise and decoding experiments
+* integration with Qiskit, Stim, or PyMatching
 
 ## Planned repository structure
 
@@ -80,7 +80,7 @@ The project is organized around the following concepts:
 * **Homology classes**
 * **Toric and surface codes**
 
-A shared glossary will be developed in `docs/glossary.md`.
+A shared glossary will be developed in [`docs/glossary.md`](docs/glossary.md).
 
 ## Reading list
 
@@ -95,11 +95,11 @@ This project is currently in its initial preparation phase.
 
 Before implementation begins, the planned tasks are:
 
-* define a minimal shared glossary,
-* agree on the first target example,
-* organize the repository,
-* collect reading notes,
-* define the first data structures for complexes and boundary maps.
+* define a minimal shared glossary
+* agree on the first target example
+* organize the repository
+* collect reading notes
+* define the first data structures for complexes and boundary maps
 
 No stable API is currently available.
 
