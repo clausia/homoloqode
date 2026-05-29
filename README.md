@@ -18,15 +18,9 @@ The initial goals of **homoloQode** are:
 
 * Represent simple cell complexes or surface-like graphs using combinatorial data.
 * Construct boundary maps over $\mathbb{F}_2)$.
-* Verify the chain-complex condition
-$$
-  \partial_1 \partial_2 = 0.
-$$
+* Verify the chain-complex condition $\partial_1 \partial_2 = 0$.
 * Translate boundary maps into CSS check matrices $H_X$ and $H_Z$.
-* Verify the CSS commutation condition
-$$
-  H_X H_Z^T = 0 \pmod 2.
-$$
+* Verify the CSS commutation condition $H_X H_Z^T = 0 \pmod 2$.
 * Identify candidate logical operators through cycles, boundaries, and homology classes.
 * Simulate simple Pauli errors and compute syndromes.
 * Implement small decoding experiments for selected examples.
@@ -94,29 +88,6 @@ The initial reading list is maintained in [`references/reading_list.md`](referen
 
 It includes a small set of core references on stabilizer/CSS codes, topological quantum memories, surface codes, and homological quantum error correction.
 
-
-The initial reading list is intentionally short and focused.
-
-1. Daniel Gottesman, *Stabilizer Codes and Quantum Error Correction*
-   https://arxiv.org/abs/quant-ph/9705052
-
-2. A. R. Calderbank and Peter Shor, *Good Quantum Error-Correcting Codes Exist*
-   https://arxiv.org/abs/quant-ph/9512032
-
-3. Andrew Steane, *Multiple-Particle Interference and Quantum Error Correction*
-   https://arxiv.org/abs/quant-ph/9601029
-
-4. Eric Dennis, Alexei Kitaev, Andrew Landahl, and John Preskill, *Topological Quantum Memory*
-   https://arxiv.org/abs/quant-ph/0110143
-
-5. Héctor Bombin and Miguel A. Martin-Delgado, *Homological Error Correction: Classical and Quantum Codes*
-   https://arxiv.org/abs/quant-ph/0605094
-
-6. Sergey Bravyi and Alexei Kitaev, *Quantum Codes on a Lattice with Boundary*
-   https://arxiv.org/abs/quant-ph/9811052
-
-7. Alexei Kitaev, *Fault-tolerant quantum computation by anyons*
-   https://arxiv.org/abs/quant-ph/9707021
 
 ## Development status
 
