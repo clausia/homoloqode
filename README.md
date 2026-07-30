@@ -10,7 +10,7 @@ Topological and homological quantum codes provide a natural bridge between algeb
 
 Many introductory quantum-computing projects implement a single known algorithm or a small code example. In contrast, **homoloQode** aims to develop a more structural and reusable framework for constructing and studying small homological quantum codes from their underlying mathematical data.
 
-The project is currently in a preparation and prototyping phase.
+The project is currently in active MVP development.
 
 ## Project goals
 
@@ -41,13 +41,14 @@ provides a clean starting point because it directly connects:
 * syndromes
 * and decoding intuition
 
-Possible later extensions include:
+Planned post-MVP directions include:
 
 * planar surface codes with boundaries
 * relative homology
-* visualization of lattices and logical operators
-* simple noise and decoding experiments
-* integration with additional tools such as Stim or PyMatching
+* cup products and fault-tolerant logical-gate research
+* Khovanov-related quantum codes and graded chain complexes
+* homology-preserving transformations that change physical code parameters
+* scalable decoder and simulator integrations such as PyMatching and Stim
 
 ## Repository structure
 
@@ -59,6 +60,7 @@ homoloQode/
 ├── docs/
 │   ├── architecture.md
 │   ├── glossary.md
+│   ├── mvp_roadmap.md
 │   └── reading_notes.md
 ├── references/
 ├── notebooks/
@@ -77,7 +79,9 @@ homoloQode/
 
 The core package separates combinatorial cell data, binary chain complexes, and
 abstract CSS codes. The architectural decisions and extension boundaries are
-documented in [`docs/architecture.md`](docs/architecture.md).
+documented in [`docs/architecture.md`](docs/architecture.md). The current MVP,
+issue dependencies, parallel work plan, and post-MVP research directions are
+described in [`docs/mvp_roadmap.md`](docs/mvp_roadmap.md).
 
 ## Quick start
 
@@ -247,7 +251,8 @@ The first implementation scaffold is now available. It includes:
 The toric-code construction itself is implemented, but the complete MVP is not
 finished. Exact code-distance computation, noise sampling, decoding,
 end-to-end experiments, and geometric visualizations remain to be added. The
-remaining work will be tracked as GitHub issues. The API remains experimental.
+remaining work is tracked as GitHub issues and summarized in the
+[MVP and project roadmap](docs/mvp_roadmap.md). The API remains experimental.
 
 ## License
 
