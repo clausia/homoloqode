@@ -81,14 +81,61 @@ documented in [`docs/architecture.md`](docs/architecture.md).
 
 ## Quick start
 
-Create and activate the project environment, then install the package and all
-required dependencies in editable mode:
+### 1. Create an environment
+
+Using an isolated environment is strongly recommended, but homoloQode does not
+depend on a particular environment manager. Choose one of the following
+options, or use another tool such as `uv`, Poetry, or virtualenv.
+
+<details>
+<summary><strong>Conda</strong></summary>
+
+Create and activate a Conda environment with Python 3.12:
 
 ```bash
 conda create --name homoloqode python=3.12
 conda activate homoloqode
+```
+
+</details>
+
+<details>
+<summary><strong>Python venv — Windows PowerShell</strong></summary>
+
+Create and activate an environment using Python's built-in `venv` module:
+
+```powershell
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+```
+
+</details>
+
+<details>
+<summary><strong>Python venv — macOS or Linux</strong></summary>
+
+Create and activate an environment using Python's built-in `venv` module:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+</details>
+
+If an environment is already active, or you intentionally do not want to use
+one, continue directly with the installation step.
+
+### 2. Install homoloQode
+
+From the repository root—the directory containing `pyproject.toml`—install the
+project and all required dependencies in editable mode:
+
+```bash
 python -m pip install -e .
 ```
+
+This command is independent of how the Python environment was created.
 
 The package requirements are declared in `pyproject.toml`. The current minimums
 are Jupyter 1.1, NumPy 2.5, Qiskit 2.5 with visualization support, and pytest
@@ -96,17 +143,41 @@ are Jupyter 1.1, NumPy 2.5, Qiskit 2.5 with visualization support, and pytest
 integration layer from the mathematical core, but it is part of the required
 MVP.
 
-Register the environment as a Jupyter kernel once:
+### 3. Run a notebook
+
+When using an IDE with notebook support, open the `.ipynb` file directly and
+select the Python interpreter from the environment where homoloQode was
+installed. No separate Jupyter command or kernel registration is normally
+needed.
+
+To use Jupyter outside an IDE, run the following command from the repository
+root and open the desired file from the browser:
+
+```bash
+jupyter notebook
+```
+
+The introductory notebook is:
+
+```text
+notebooks/01_toric_code_from_boundary_maps.ipynb
+```
+
+<details>
+<summary><strong>Optional: register the environment as a Jupyter kernel</strong></summary>
+
+Most users do not need this step. Use it only if Jupyter is running outside an
+IDE and does not show the environment where homoloQode is installed:
 
 ```bash
 python -m ipykernel install --user --name homoloqode --display-name "Python (homoloqode)"
 ```
 
-Start JupyterLab with the introductory notebook:
+After registering it, select `Python (homoloqode)` from Jupyter's kernel menu.
 
-```bash
-jupyter lab notebooks/01_toric_code_from_boundary_maps.ipynb
-```
+</details>
+
+### 4. Use homoloQode
 
 Construct a periodic square toric code:
 
@@ -121,6 +192,8 @@ assert code.n == 18
 assert code.k == 2
 assert chain_complex.betti_1 == 2
 ```
+
+### 5. Run the tests
 
 Run the test suite with:
 
