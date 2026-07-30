@@ -50,6 +50,18 @@ Link: https://arxiv.org/abs/quant-ph/9707021
 
 Purpose: Conceptual and historical source for the toric code, anyonic excitations, and topological quantum computation.
 
+### 8. Sergey Bravyi and Robert König — *Classification of Topologically Protected Gates for Local Stabilizer Codes*
+
+Link: https://arxiv.org/abs/1206.1609
+
+Purpose: Establishes the dimensional bound on geometrically local constant-depth logical gates in topological stabilizer codes. It provides the main limitation against which proposed fault-tolerant logical-gate constructions should be compared.
+
+### 9. Nikolas P. Breuckmann, Margarita Davydova, Jens N. Eberhardt, and Nathanan Tantivasadakarn — *Cups and Gates I: Cohomology Invariants and Logical Quantum Operations*
+
+Link: https://arxiv.org/abs/2410.16250
+
+Purpose: Develops cohomology invariants and cup products as a systematic construction of diagonal logical gates for CSS codes, including constant-depth copy-cup gates for selected qLDPC code families.
+
 ## Notes
 
 PDF files are not stored in this repository. Stable arXiv links are used instead.

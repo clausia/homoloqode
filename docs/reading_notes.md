@@ -10,7 +10,7 @@ These notes are intended to be collaborative and preliminary. We can add, revise
 
 ## Reading template
 
-```markdown id="gic4yy"
+```markdown
 ## Reference title
 
 **Citation:**  
@@ -132,4 +132,138 @@ TBD
 * What is the smallest example that still shows nontrivial logical operators?
 * When should we introduce decoding: immediately with brute force, or later?
 
+---
+
+## 3. Breuckmann-Davydova-Eberhardt-Tantivasadakarn -- Cups and Gates I
+
+**Citation:**
+Nikolas P. Breuckmann, Margarita Davydova, Jens N. Eberhardt, and Nathanan Tantivasadakarn, *Cups and Gates I: Cohomology invariants and logical quantum operations*, 2025.
+Link: https://arxiv.org/abs/2410.16250
+
+**Read by:**
+Claudia Zendejas-Morales, July 2026.
+
+### Main concepts
+
+* CSS codes as cochain complexes
+* Cohomology invariants as logical phase functions
+* Cup products and integrated cup products
+* Copy-cup logical gates
+* Constant-depth logical circuits
+* qLDPC codes and the Clifford hierarchy
+* Preorientations and the integrated Leibniz rule
+
+### Definitions to add to the glossary
+
+* Cochain complex
+* Cohomology class
+* Cup product
+* qLDPC code
+* Clifford hierarchy
+* Constant-depth circuit
+* Preorientation
+
+### Equations or constructions relevant to the project
+
+* A CSS code can be represented by a cochain complex
+  $$
+  C^0 \xrightarrow{\delta^0} C^1 \xrightarrow{\delta^1} C^2,
+  $$
+  with physical qubits associated with a basis of $C^1$ and logical information represented by
+  $$
+  H^1=\ker(\delta^1)/\operatorname{im}(\delta^0).
+  $$
+* An integrated $\Lambda$-fold cup product defines a phase function
+  $$
+  \Psi_{\cup,\Lambda}(c_1,\ldots,c_\Lambda)
+  =
+  \int c_1\cup\cdots\cup c_\Lambda.
+  $$
+* When this function depends only on cohomology classes, it defines the diagonal logical operation
+  $$
+  |c_1,\ldots,c_\Lambda\rangle
+  \longmapsto
+  (-1)^{\int c_1\cup\cdots\cup c_\Lambda}
+  |c_1,\ldots,c_\Lambda\rangle.
+  $$
+* For suitable codes, the physical circuit is composed of controlled-$Z$-type gates, has bounded depth, and induces an operation at level $\Lambda$ of the Clifford hierarchy.
+
+### Possible implementation ideas for later
+
+* Add a cochain-complex view of the same data used by the homological CSS construction
+* Implement cup products first on a small simplicial or cubical complex
+* Verify computationally that an integrated cup product is unchanged after adding a coboundary
+* Derive the physical $CZ$ pattern for two copies of a small two-dimensional toric code
+* Represent a candidate preorientation and test the integrated Leibniz condition
+* Keep this functionality separate from the first toric-code MVP until the basic chain-complex and CSS interfaces are stable
+
+### Open questions
+
+* Which class of complexes should provide the first concrete cup-product implementation?
+* Can the project expose cup products without committing to a full differential graded algebra API?
+* How should multiple copies of a code and the induced logical action be represented?
+* Which conditions can be verified algorithmically for a finite input code?
+* Is the two-copy toric-code $CZ$ example small enough to become the first advanced notebook?
+
+---
+
+## 4. Bravyi-Konig -- Classification of Topologically Protected Gates
+
+**Citation:**
+Sergey Bravyi and Robert König, *Classification of topologically protected gates for local stabilizer codes*, 2013.
+Link: https://arxiv.org/abs/1206.1609
+
+**Read by:**
+Claudia Zendejas-Morales, July 2026.
+
+### Main concepts
+
+* Topological stabilizer codes
+* Geometrically local constant-depth circuits
+* Topologically protected logical gates
+* Clifford hierarchy
+* Cleaning lemma
+* Union lemma
+* Correctable regions and light cones
+
+### Definitions to add to the glossary
+
+* Geometric locality
+* Topologically protected gate
+* Correctable region
+* Cleaning lemma
+* Circuit light cone
+
+### Equations or constructions relevant to the project
+
+* The Clifford hierarchy is defined recursively by
+  $$
+  \mathcal P_1=\text{Pauli operators},
+  \qquad
+  \mathcal P_j=
+  \left\{
+  U:U\mathcal P_1U^\dagger\subseteq\mathcal P_{j-1}
+  \right\}.
+  $$
+* The Bravyi-König result bounds a logical gate implemented by a geometrically local constant-depth circuit in a $D$-dimensional topological stabilizer code:
+  $$
+  U_{\mathrm{logical}}\in\mathcal P_D.
+  $$
+* In two dimensions, protected logical gates are therefore restricted to Clifford operations.
+* The proof uses cleaned logical representatives and nested commutators whose support is progressively confined to correctable regions.
+
+### Possible implementation ideas for later
+
+* Store geometric support information for cells, checks, and gates when a code has an embedding
+* Compute the support expansion produced by a finite-depth local circuit
+* Illustrate the two-dimensional restriction using logical loops of a toric code
+* Classify implemented logical actions as Pauli, Clifford, or a higher-level operation in small examples
+* Use this result as a consistency check for gates constructed from cup products
+
+### Open questions
+
+* How much geometric information should be part of the core data model rather than a visualization layer?
+* What operational definition of locality should homoloQode use for non-Euclidean or non-geometric qLDPC codes?
+* Can small computational checks distinguish a genuinely protected logical gate from a logical operation that merely preserves the code space?
+* How should the project communicate that the Bravyi-König bound depends on geometric locality, whereas LDPC locality alone is different?
 

@@ -17,7 +17,7 @@ The project is currently in a preparation and prototyping phase.
 The initial goals of **homoloQode** are:
 
 * Represent simple cell complexes or surface-like graphs using combinatorial data
-* Construct boundary maps over $\mathbb{F}_2)$
+* Construct boundary maps over $\mathbb{F}_2$
 * Verify the chain-complex condition $\partial_1 \partial_2 = 0$
 * Translate boundary maps into CSS check matrices $H_X$ and $H_Z$
 * Verify the CSS commutation condition $H_X H_Z^T = 0 \pmod 2$
