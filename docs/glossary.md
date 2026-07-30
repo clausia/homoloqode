@@ -66,7 +66,7 @@ An **application programming interface (API)** is the documented set of classes,
 
 For example, a cell-complex data model must decide how cells are identified, ordered, validated, and converted into matrices. A stable API can hide those internal choices from users.
 
-**Project role:** homoloQode needs a clear separation between the input complex, its boundary matrices, the resulting CSS code, and optional Qiskit circuits.
+**Project role:** homoloQode needs a clear separation between the input complex, its boundary matrices, the resulting CSS code, and the required Qiskit integration layer.
 
 **Related concepts:** Cell complex, incidence matrix, quantum circuit.
 
@@ -534,7 +534,7 @@ A **quantum circuit** is an ordered collection of quantum gates, state preparati
 
 An abstract code definition does not automatically provide a complete circuit. For example, check matrices specify stabilizers, but syndrome extraction additionally requires ancilla qubits, a gate schedule, and measurements.
 
-**Project role:** The first project layer constructs abstract CSS codes. A later Qiskit layer may generate preparation or syndrome-extraction circuits from those code objects.
+**Project role:** The first project layer constructs abstract CSS codes. The required Qiskit layer will generate preparation or syndrome-extraction circuits from those code objects.
 
 **Related concepts:** Constant-depth circuit, syndrome, fault-tolerant logical gate.
 

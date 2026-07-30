@@ -77,7 +77,7 @@ src/homoloqode/
 ├── cohomology/       future cup products and cohomology operations
 ├── khovanov/         future graded/Khovanov chain-complex adapters
 ├── transformations/ future homology-preserving transformations
-└── integrations/     optional Qiskit and other external adapters
+└── integrations/     required Qiskit layer and future external adapters
 ```
 
 ## Extension boundaries
@@ -98,7 +98,7 @@ $$
 \longrightarrow
 \text{logical action}
 \longrightarrow
-\text{optional physical circuit}.
+\text{Qiskit physical circuit}.
 $$
 
 Logical-gate circuits belong in an integration layer and must distinguish
@@ -137,5 +137,5 @@ Preserving homology alone does not imply preservation of the physical CSS code.
 3. Verify toric-code check ranks and $[[n,k]]$ parameters for sizes two and
    three.
 4. Compute syndromes and paired logical representatives over $\mathbb F_2$.
-5. Add optional Qiskit export and ideal syndrome-extraction circuits.
+5. Add Qiskit export and ideal syndrome-extraction circuits.
 6. Add small-code distance calculations and decoding experiments.

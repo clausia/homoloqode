@@ -24,11 +24,14 @@ The initial goals of **homoloQode** are:
 * Identify candidate logical operators through cycles, boundaries, and homology classes
 * Simulate simple Pauli errors and compute syndromes
 * Implement small decoding experiments for selected examples
+* Integrate the resulting codes and circuits with Qiskit
 * Provide clear notebooks, tests, and documentation
 
 ## Initial scope
 
-The first target example will likely be a small toric code constructed from boundary maps. This provides a clean starting point because it directly connects:
+The first implemented example is a small toric code constructed from boundary
+maps on a periodic square lattice, with physical qubits placed on edges. This
+provides a clean starting point because it directly connects:
 
 * a two-dimensional cell complex
 * boundary maps
@@ -44,7 +47,7 @@ Possible later extensions include:
 * relative homology
 * visualization of lattices and logical operators
 * simple noise and decoding experiments
-* integration with Qiskit, Stim, or PyMatching
+* integration with additional tools such as Stim or PyMatching
 
 ## Repository structure
 
@@ -59,6 +62,7 @@ homoloQode/
 │   └── reading_notes.md
 ├── references/
 ├── notebooks/
+│   └── 01_toric_code_from_boundary_maps.ipynb
 ├── src/homoloqode/
 │   ├── algebra/
 │   ├── codes/
@@ -76,10 +80,31 @@ documented in [`docs/architecture.md`](docs/architecture.md).
 
 ## Quick start
 
-Create an environment and install the package in editable mode:
+Create and activate the project environment, then install the package and all
+required dependencies in editable mode:
 
 ```bash
-python -m pip install -e ".[test]"
+conda create --name homoloqode python=3.12
+conda activate homoloqode
+python -m pip install -e .
+```
+
+The package requirements are declared in `pyproject.toml`. The current minimums
+are Jupyter 1.1, NumPy 2.5, Qiskit 2.5 with visualization support, and pytest
+9.1. These are required project dependencies. Qiskit is kept in a separate
+integration layer from the mathematical core, but it is part of the required
+MVP.
+
+Register the environment as a Jupyter kernel once:
+
+```bash
+python -m ipykernel install --user --name homoloqode --display-name "Python (homoloqode)"
+```
+
+Start JupyterLab with the introductory notebook:
+
+```bash
+jupyter lab notebooks/01_toric_code_from_boundary_maps.ipynb
 ```
 
 Construct a periodic square toric code:
@@ -130,14 +155,23 @@ It includes a small set of core references on stabilizer/CSS codes, topological 
 
 ## Development status
 
-The first implementation scaffold is now available. It includes exact binary
-linear algebra, finite two-dimensional cell complexes, three-term chain
-complexes, CSS-code construction, paired logical representatives, syndromes,
-and periodic square toric-code examples.
+The first implementation scaffold is now available. It includes:
 
-The API remains experimental. The next MVP tasks are optional Qiskit adapters,
-small-code distance calculations, explanatory notebooks, and simple decoding
-experiments.
+* exact binary linear algebra over $\mathbb F_2$;
+* finite two-dimensional cell complexes;
+* three-term chain complexes and boundary validation;
+* periodic square toric codes with qubits on edges;
+* construction and validation of $H_X$ and $H_Z$;
+* CSS syndromes and Pauli stabilizer strings;
+* paired logical $X$ and $Z$ representatives;
+* automated tests for the size-two and size-three toric codes;
+* an [explanatory notebook](notebooks/01_toric_code_from_boundary_maps.ipynb)
+  deriving a toric code from boundary maps.
+
+The toric-code construction itself is implemented, but the complete MVP is not
+finished. Code-distance computation, decoding, Qiskit adapters and
+syndrome-extraction circuits, and geometric visualizations remain to be added.
+The API remains experimental.
 
 ## License
 

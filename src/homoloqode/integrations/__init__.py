@@ -1,2 +1,1 @@
-"""Optional integrations with quantum-software and decoding ecosystems."""
-
+"""Qiskit integration and future quantum-software ecosystem adapters."""
