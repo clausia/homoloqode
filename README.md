@@ -62,7 +62,8 @@ homoloQode/
 │   └── reading_notes.md
 ├── references/
 ├── notebooks/
-│   └── 01_toric_code_from_boundary_maps.ipynb
+│   ├── 01_toric_code_from_boundary_maps.ipynb
+│   └── 02_algebraic_vs_qiskit_syndromes.ipynb
 ├── src/homoloqode/
 │   ├── algebra/
 │   ├── codes/
@@ -166,12 +167,14 @@ The first implementation scaffold is now available. It includes:
 * paired logical $X$ and $Z$ representatives;
 * automated tests for the size-two and size-three toric codes;
 * an [explanatory notebook](notebooks/01_toric_code_from_boundary_maps.ipynb)
-  deriving a toric code from boundary maps.
+  deriving a toric code from boundary maps;
+* ideal Qiskit syndrome-extraction circuits and a
+  [comparison notebook](notebooks/02_algebraic_vs_qiskit_syndromes.ipynb).
 
 The toric-code construction itself is implemented, but the complete MVP is not
-finished. Code-distance computation, decoding, Qiskit adapters and
-syndrome-extraction circuits, and geometric visualizations remain to be added.
-The API remains experimental.
+finished. Exact code-distance computation, noise sampling, decoding,
+end-to-end experiments, and geometric visualizations remain to be added. The
+remaining work will be tracked as GitHub issues. The API remains experimental.
 
 ## License
 
