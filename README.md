@@ -46,22 +46,61 @@ Possible later extensions include:
 * simple noise and decoding experiments
 * integration with Qiskit, Stim, or PyMatching
 
-## Planned repository structure
+## Repository structure
 
 ```text
 homoloQode/
 ├── README.md
+├── pyproject.toml
 ├── LICENSE
 ├── docs/
+│   ├── architecture.md
 │   ├── glossary.md
 │   └── reading_notes.md
 ├── references/
 ├── notebooks/
-├── src/
+├── src/homoloqode/
+│   ├── algebra/
+│   ├── codes/
+│   ├── topology/
+│   ├── cohomology/
+│   ├── khovanov/
+│   ├── transformations/
+│   └── integrations/
 └── tests/
 ```
 
-During the early preparation phase, some directories may contain only placeholder files.
+The core package separates combinatorial cell data, binary chain complexes, and
+abstract CSS codes. The architectural decisions and extension boundaries are
+documented in [`docs/architecture.md`](docs/architecture.md).
+
+## Quick start
+
+Create an environment and install the package in editable mode:
+
+```bash
+python -m pip install -e ".[test]"
+```
+
+Construct a periodic square toric code:
+
+```python
+from homoloqode import square_toric_complex
+
+cell_complex = square_toric_complex(size=3)
+chain_complex = cell_complex.to_chain_complex()
+code = chain_complex.to_css_code()
+
+assert code.n == 18
+assert code.k == 2
+assert chain_complex.betti_1 == 2
+```
+
+Run the test suite with:
+
+```bash
+python -m pytest
+```
 
 ## Core concepts
 
@@ -91,17 +130,14 @@ It includes a small set of core references on stabilizer/CSS codes, topological 
 
 ## Development status
 
-This project is currently in its initial preparation phase.
+The first implementation scaffold is now available. It includes exact binary
+linear algebra, finite two-dimensional cell complexes, three-term chain
+complexes, CSS-code construction, paired logical representatives, syndromes,
+and periodic square toric-code examples.
 
-Before implementation begins, the planned tasks are:
-
-* define a minimal shared glossary
-* agree on the first target example
-* organize the repository
-* collect reading notes
-* define the first data structures for complexes and boundary maps
-
-No stable API is currently available.
+The API remains experimental. The next MVP tasks are optional Qiskit adapters,
+small-code distance calculations, explanatory notebooks, and simple decoding
+experiments.
 
 ## License
 
