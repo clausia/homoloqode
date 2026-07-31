@@ -104,7 +104,7 @@ conda activate homoloqode
 </details>
 
 <details>
-<summary><strong>Python venv — Windows PowerShell</strong></summary>
+<summary><strong>Python venv: Windows PowerShell</strong></summary>
 
 Create and activate an environment using Python's built-in `venv` module:
 
@@ -116,7 +116,7 @@ python -m venv .venv
 </details>
 
 <details>
-<summary><strong>Python venv — macOS or Linux</strong></summary>
+<summary><strong>Python venv: macOS or Linux</strong></summary>
 
 Create and activate an environment using Python's built-in `venv` module:
 
@@ -132,7 +132,7 @@ one, continue directly with the installation step.
 
 ### 2. Install homoloQode
 
-From the repository root—the directory containing `pyproject.toml`—install the
+From the repository root (the directory containing `pyproject.toml`), install the
 project and all required dependencies in editable mode:
 
 ```bash

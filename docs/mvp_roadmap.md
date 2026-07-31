@@ -14,10 +14,6 @@ GitHub issues are the authoritative source for detailed requirements and
 acceptance criteria. This document intentionally stays at the roadmap level and
 does not reproduce the full issue descriptions.
 
-> **Issue links:** Exact GitHub issue numbers will be inserted when they are
-> available. Until then, the `MVP-XX` links below open the repository's issue
-> tracker. The link definitions are centralized at the end of this file.
-
 ## Mathematical foundation
 
 The initial code family is constructed from a finite binary chain complex
@@ -118,14 +114,14 @@ completed sequentially.
 |---|---|---|---|---|
 | [MVP-01] | Ideal Qiskit syndrome-extraction adapter | Implemented | Claudia | Existing CSS core |
 | [MVP-02] | Algebraic-versus-Qiskit syndrome notebook | Implemented | Claudia | MVP-01 |
-| [MVP-03] | Exact X, Z, and overall distance for small CSS codes | Not started — can begin now | Amey | Existing GF(2) and logical-space core |
-| [MVP-04] | Reproducible independent Pauli noise model | Not started — can begin now | Amey | Existing CSS error representation |
-| [MVP-05] | Exhaustive minimum-weight CSS decoder | Not started — can begin now | Claudia / pair | Existing GF(2) core |
-| [MVP-06] | Reusable end-to-end memory-experiment API | Not started — blocked | Claudia | MVP-04 and MVP-05 |
-| [MVP-07] | Noise-and-decoding experiment notebook | Not started — blocked | Amey | MVP-06 |
-| [MVP-08] | Periodic-lattice, error, syndrome, and logical visualization | Not started — can begin now | Amey | Existing topology and CSS core |
-| [MVP-09] | Continuous integration for tests and notebooks | Not started — can begin now | Claudia | Existing tests and notebooks |
-| [MVP-10] | MVP integration, documentation, and release audit | Not started — blocked | Claudia | MVP-03 through MVP-09 |
+| [MVP-03] | Exact X, Z, and overall distance for small CSS codes | Not started: can begin now | Amey | Existing GF(2) and logical-space core |
+| [MVP-04] | Reproducible independent Pauli noise model | Not started: can begin now | Amey | Existing CSS error representation |
+| [MVP-05] | Exhaustive minimum-weight CSS decoder | Not started: can begin now | Claudia | Existing GF(2) core |
+| [MVP-06] | Reusable end-to-end memory-experiment API | Not started: blocked | Claudia | MVP-04 and MVP-05 |
+| [MVP-07] | Noise-and-decoding experiment notebook | Not started: blocked | Amey | MVP-06 |
+| [MVP-08] | Periodic-lattice, error, syndrome, and logical visualization | Not started: can begin now | Amey | Existing topology and CSS core |
+| [MVP-09] | Continuous integration for tests and notebooks | Not started: can begin now | Claudia | Existing tests and notebooks |
+| [MVP-10] | MVP integration, documentation, and release audit | Not started: blocked | Claudia | MVP-03 through MVP-09 |
 
 ## Blocking relationships
 
@@ -214,7 +210,7 @@ The MVP is ready for its first release when:
 Completing the MVP establishes a tested reference platform. The following work
 is deliberately postponed until that platform is stable.
 
-### Stage 1 — Broaden the topological-code foundation
+### Stage 1: Broaden the topological-code foundation
 
 The first post-MVP stage extends the current toric-code assumptions:
 
@@ -231,7 +227,7 @@ The first post-MVP stage extends the current toric-code assumptions:
 This stage should preserve the separation among topology, chain complexes, CSS
 codes, and external integrations.
 
-### Stage 2A — Cup products and logical gates
+### Stage 2A: Cup products and logical gates
 
 This research track develops the cochain-level structure needed for
 cohomological logical operations:
@@ -257,7 +253,7 @@ cohomological logical operations:
 Possible later operations include Steenrod squares, Bockstein homomorphisms,
 and related cohomology operations.
 
-### Stage 2B — Khovanov-related quantum codes
+### Stage 2B: Khovanov-related quantum codes
 
 This track requires a representation more general than the MVP's three-term
 complex:
@@ -274,7 +270,7 @@ complex:
 The existing `ChainComplex2D` should remain a clear MVP abstraction rather than
 being stretched into a premature general Khovanov model.
 
-### Stage 2C — Homology-preserving transformations
+### Stage 2C: Homology-preserving transformations
 
 This track studies modifications of a complex that preserve homology while
 changing the physical realization of the code:
@@ -299,7 +295,7 @@ For every transformation, experiments should compare:
 Preserving homology does not imply preserving the physical CSS code. Measuring
 those differences is the purpose of this research direction.
 
-### Stage 3 — Comparative research and technical report
+### Stage 3: Comparative research and technical report
 
 After the post-MVP tracks have concrete examples:
 
@@ -352,13 +348,13 @@ When a GitHub issue is created, closed, split, or renumbered:
 4. keep implementation details in GitHub rather than duplicating them here;
 5. update the README only when the public project status changes materially.
 
-[MVP-01]: https://github.com/clausia/homoloqode/issues
-[MVP-02]: https://github.com/clausia/homoloqode/issues
-[MVP-03]: https://github.com/clausia/homoloqode/issues
-[MVP-04]: https://github.com/clausia/homoloqode/issues
-[MVP-05]: https://github.com/clausia/homoloqode/issues
-[MVP-06]: https://github.com/clausia/homoloqode/issues
-[MVP-07]: https://github.com/clausia/homoloqode/issues
-[MVP-08]: https://github.com/clausia/homoloqode/issues
-[MVP-09]: https://github.com/clausia/homoloqode/issues
-[MVP-10]: https://github.com/clausia/homoloqode/issues
+[MVP-01]: https://github.com/clausia/homoloqode/issues/1
+[MVP-02]: https://github.com/clausia/homoloqode/issues/2
+[MVP-03]: https://github.com/clausia/homoloqode/issues/3
+[MVP-04]: https://github.com/clausia/homoloqode/issues/4
+[MVP-05]: https://github.com/clausia/homoloqode/issues/5
+[MVP-06]: https://github.com/clausia/homoloqode/issues/6
+[MVP-07]: https://github.com/clausia/homoloqode/issues/7
+[MVP-08]: https://github.com/clausia/homoloqode/issues/8
+[MVP-09]: https://github.com/clausia/homoloqode/issues/9
+[MVP-10]: https://github.com/clausia/homoloqode/issues/10
