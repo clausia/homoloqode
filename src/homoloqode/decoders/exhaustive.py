@@ -17,9 +17,10 @@ from numpy.typing import ArrayLike
 
 from homoloqode.algebra.gf2 import (
     BinaryArray,
+    as_binary_matrix,
     as_binary_vector,
-    is_in_row_span,
     matmul,
+    rank,
 )
 from homoloqode.codes.css import CSSCode, CSSSyndrome
 
@@ -65,6 +66,19 @@ def _positive_integer(value: object, *, name: str) -> int:
     if isinstance(value, bool) or not isinstance(value, int) or value <= 0:
         raise ValueError(f"{name} must be a positive integer; got {value!r}.")
     return value
+
+
+def _is_in_row_span(vector: ArrayLike, matrix: ArrayLike) -> bool:
+    """Return whether a vector belongs to a binary matrix's row space."""
+
+    candidate = as_binary_vector(vector, name="residual support")
+    rows = as_binary_matrix(matrix, name="stabilizer checks")
+    if candidate.shape[0] != rows.shape[1]:
+        raise ValueError(
+            "Residual support length must match the stabilizer-check width; "
+            f"got {candidate.shape[0]} and {rows.shape[1]}."
+        )
+    return rank(np.vstack((rows, candidate))) == rank(rows)
 
 
 def _find_correction(
@@ -176,6 +190,6 @@ def classify_residual(
     syndrome = code.syndrome(x_error=x, z_error=z)
     if np.any(syndrome.x_checks) or np.any(syndrome.z_checks):
         return ResidualClass.INVALID
-    if is_in_row_span(x, code.hx) and is_in_row_span(z, code.hz):
+    if _is_in_row_span(x, code.hx) and _is_in_row_span(z, code.hz):
         return ResidualClass.STABILIZER
     return ResidualClass.LOGICAL
