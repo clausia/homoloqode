@@ -91,6 +91,19 @@ def row_space_basis(matrix: ArrayLike) -> BinaryArray:
     return as_binary_matrix(reduced[nonzero], name="row-space basis")
 
 
+def is_in_row_span(vector: ArrayLike, matrix: ArrayLike) -> bool:
+    """Return whether ``vector`` belongs to the binary row space of ``matrix``."""
+
+    candidate = _validated_array(vector, ndim=1, name="vector")
+    rows = _validated_array(matrix, ndim=2, name="matrix")
+    if candidate.shape[0] != rows.shape[1]:
+        raise ValueError(
+            "Vector length must match the matrix column count; "
+            f"got {candidate.shape[0]} and {rows.shape[1]}."
+        )
+    return rank(np.vstack((rows, candidate))) == rank(rows)
+
+
 def null_space_basis(matrix: ArrayLike) -> BinaryArray:
     """Return row vectors forming a basis of the right null space."""
 

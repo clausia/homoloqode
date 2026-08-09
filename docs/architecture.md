@@ -52,6 +52,9 @@ The three core layers have distinct responsibilities:
   real-valued rank and solver functions are not used for these calculations.
 * `homoloqode.codes` stores abstract CSS codes and derives syndromes,
   stabilizers, and paired logical operators.
+* `homoloqode.decoders` consumes code objects and explicit syndromes. Its
+  exhaustive decoder is a deterministic small-code reference implementation,
+  with explicit guards around exponential searches.
 
 Qiskit objects do not appear in these layers.
 
@@ -74,6 +77,7 @@ src/homoloqode/
 ├── algebra/          exact linear algebra over F_2
 ├── topology/         cells, chain complexes, and cellulation factories
 ├── codes/            CSS code objects and logical operators
+├── decoders/         deterministic reference decoders for small codes
 ├── cohomology/       future cup products and cohomology operations
 ├── khovanov/         future graded/Khovanov chain-complex adapters
 ├── transformations/ future homology-preserving transformations
