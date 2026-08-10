@@ -1,5 +1,7 @@
 # homoloQode
 
+[![Tests and notebooks](https://github.com/clausia/homoloqode/actions/workflows/tests.yml/badge.svg)](https://github.com/clausia/homoloqode/actions/workflows/tests.yml)
+
 **homoloQode** is a research-software project for exploring the connection between topology, homology, and quantum error-correcting codes.
 
 The goal is to build a Python-based toolkit that starts from simple combinatorial or topological data, such as cell complexes or surface-like graphs, and constructs the corresponding homological CSS/stabilizer quantum codes. The project aims to connect mathematical structure with reproducible software, examples, tests, and explanatory notebooks.
