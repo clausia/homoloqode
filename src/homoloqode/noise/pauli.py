@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 import numpy as np 
+import math
 from numpy.typing import ArrayLike
 from homoloqode.algebra.gf2 import as_binary_vector 
 #dict to work with for pauli errors :
@@ -50,6 +51,10 @@ class IndependentPauliNoise:
     def __post_init__(self) -> None:
         if isinstance(self.p_x, bool):   # very impo since True acts like 1, check: True==1
                raise ValueError("p_x must be a real number, not a bool.")
+        if isinstance(self.p_y, bool):   # very impo since True acts like 1, check: True==1
+                       raise ValueError("p_y must be a real number, not a bool.")
+        if isinstance(self.p_z, bool):   # very impo since True acts like 1, check: True==1
+                       raise ValueError("p_z must be a real number, not a bool.")
         if not (0 <= self.p_x <= 1):
             raise ValueError(f"X error probability must be in [0, 1]; got {self.p_x}.")
         if not (0 <= self.p_y <= 1):
@@ -57,7 +62,7 @@ class IndependentPauliNoise:
         if not (0 <= self.p_z <= 1):
             raise ValueError(f"Z error probability must be in [0, 1]; got {self.p_z}.")
         total = self.p_x + self.p_y + self.p_z
-        if total > 1 + _TOLERANCE:
+        if total>1.0 and not math.isclose(total, 1.0, abs_tol=_TOLERANCE):
                 raise ValueError(
                     f"Sum of X, Y, and Z error probabilities must be at most 1; got {total}."
                             )    # tolerance important since p_x=0.33, p_y=0.56, p_z=0.11 didnt work bfr
@@ -65,7 +70,7 @@ class IndependentPauliNoise:
 
     @property
     def p_identity(self) -> float:
-        return 1 - (self.p_x + self.p_y + self.p_z)
+        return max(0, 1 - (self.p_x + self.p_y + self.p_z))
     
 
     def sample(self, n: int, *, rng: np.random.Generator) -> PauliError:

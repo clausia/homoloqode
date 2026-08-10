@@ -106,9 +106,19 @@ def test_floating_point_rounding_noise_is_tolerated() -> None:
     assert noise.p_identity == pytest.approx(0.0, abs=1e-9)
 
 
-def test_boolean_probability_is_rejected() -> None:
+def test_x_boolean_probability_is_rejected() -> None:
     with pytest.raises(ValueError, match="bool"):
         IndependentPauliNoise(p_x=True, p_y=0.0, p_z=0.0)
+
+
+def test_y_boolean_probability_is_rejected() -> None:
+    with pytest.raises(ValueError, match="bool"):
+        IndependentPauliNoise(p_x=0.0, p_y=True, p_z=0.0)
+
+
+def test_z_boolean_probability_is_rejected() -> None:
+    with pytest.raises(ValueError, match="bool"):
+        IndependentPauliNoise(p_x=0.0, p_y=0.0, p_z=True)
 
 
 # ---------------------------------------------------------------------------
