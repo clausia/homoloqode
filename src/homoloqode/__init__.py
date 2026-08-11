@@ -8,8 +8,8 @@ from homoloqode.codes import (
     exact_distance,
     exact_distance_x,
     exact_distance_z,
+    IncompleteSearchError
 )
-from homoloqode.noise import IndependentPauliNoise, PauliError
 from homoloqode.topology import (
     CellComplex2D,
     ChainComplex2D,
@@ -29,14 +29,13 @@ __all__ = [
     "ChainComplex2D",
     "Edge",
     "Face",
-    "IndependentPauliNoise",
     "LogicalBasis",
     "OrientedEdge",
-    "PauliError",
     "Vertex",
     "exact_distance",
     "exact_distance_x",
     "exact_distance_z",
     "square_toric_complex",
     "toric_code",
+    IncompleteSearchError,
 ]
