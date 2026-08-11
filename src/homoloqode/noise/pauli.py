@@ -10,7 +10,7 @@ PAULI_LETTERS = {
      (1, 1): "Y",
      (0, 1): "Z",
 }
-_TOLERANCE = 1e-9
+_TOLERANCE = 8 * math.ulp(1.0)
        
 #dataclass is avoiding __init__, frozen saying cant chaneg, tested in scratch1.py
 @dataclass(frozen=True, slots=True)
@@ -62,7 +62,7 @@ class IndependentPauliNoise:
         if not (0 <= self.p_z <= 1):
             raise ValueError(f"Z error probability must be in [0, 1]; got {self.p_z}.")
         total = self.p_x + self.p_y + self.p_z
-        if total>1.0 and not math.isclose(total, 1.0, abs_tol=_TOLERANCE):
+        if total>1.0 and not math.isclose(total, 1.0, rel_tol=0.0, abs_tol=_TOLERANCE):
                 raise ValueError(
                     f"Sum of X, Y, and Z error probabilities must be at most 1; got {total}."
                             )    # tolerance important since p_x=0.33, p_y=0.56, p_z=0.11 didnt work bfr

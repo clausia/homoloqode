@@ -221,3 +221,6 @@ def test_sampled_error_works_directly_with_css_code_syndrome() -> None:
     syndrome = code.syndrome(x_error=error.x, z_error=error.z)
     assert syndrome.x_checks.shape[0] == code.hx.shape[0]
     assert syndrome.z_checks.shape[0] == code.hz.shape[0]
+def test_genuine_excess_over_one_is_rejected() -> None:
+    with pytest.raises(ValueError, match="must be at most 1"):
+        IndependentPauliNoise(p_x=0.5, p_y=0.5, p_z=5e-10)
