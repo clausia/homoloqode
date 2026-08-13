@@ -5,7 +5,8 @@ __pycache__/
 
 # C extensions
 *.so
-
+# personal scratch space, not part of the project
+scratch/
 # Distribution / packaging
 .Python
 build/

@@ -11,6 +11,7 @@ from homoloqode.topology import (
     square_toric_complex,
     toric_code,
 )
+from homoloqode.visualization import plot_square_toric_complex
 
 __all__ = [
     "CSSCode",
@@ -22,7 +23,7 @@ __all__ = [
     "LogicalBasis",
     "OrientedEdge",
     "Vertex",
+    "plot_square_toric_complex",
     "square_toric_complex",
     "toric_code",
 ]
-
