@@ -1,3 +1,34 @@
+"""Matplotlib visualization of a square toric complex.
+
+Vertices are checks/qubit endpoints; edges are qubits. Coordinates come
+straight from ``complex_.vertices``. Edge-level overlays (``x_error``,
+``z_error``, ``logical_x``, ``logical_z``) must have one entry per edge,
+in ``complex_.edges`` order -- confirmed to match qubit-index order used
+by ``CellComplex2D.to_chain_complex`` (columns are built by
+``enumerate(self.edges)``). ``x_syndrome`` has one entry per vertex
+(X-checks); ``z_syndrome`` one entry per face (Z-checks) -- matching the
+homological dictionary H_X = boundary-1, H_Z = boundary-2^T.
+
+Periodic wrap edges: a naive straight line from a wrap edge's source to
+its real target either crosses the whole square or, on this axis-aligned
+square lattice specifically, lands exactly on top of real edges along the
+same row/column (verified: e.g. a vertical wrap from (1,L-1) to (1,0)
+passes straight through (1,1) and overlaps the two real edges already
+there). Either way nothing in the picture would show the edge is special.
+Fixed by drawing wraps as a short stub exiting the boundary (a "repeated
+boundary strip" / fundamental-polygon style diagram) instead of the real
+target: extend one lattice step past the source, in the same direction,
+using the exact size L = max(x-coordinate) + 1.
+SO here is the final strategy:
+Wrap detection is done by parsing the exact grid position out of the edge
+id string (e_h[x,y] wraps iff x == L-1; e_v[x,y] wraps iff y == L-1),
+not by comparing coordinate distances -- at L=2 a wrap and a normal edge
+both jump exactly 1 unit and are not distinguishable by coordinates alone,
+so the id, not the geometry, is the source of truth. This id convention
+(e_h/e_v/v[x,y]/f[x,y]) is specific to square_toric_complex; this function
+is scoped to that generator only, not to CellComplex2D in general.
+"""
+
 from __future__ import annotations
 
 import matplotlib.pyplot as plt
@@ -12,12 +43,15 @@ from homoloqode.algebra.gf2 import as_binary_vector
 
 
 def _parse_grid_position(edge_id: str) -> tuple[int, int]:
+    """Parse the exact (x, y) grid position out of an e_h[x,y]/e_v[x,y] id."""
     inner = edge_id[edge_id.index("[") + 1 : edge_id.index("]")]
     x_str, y_str = inner.split(",")
     return int(x_str), int(y_str)      # well use this later to determine if the edge is in the end aka if it is wrap around
 
 
 def _validated(vector: ArrayLike | None, *, length: int, name: str) -> np.ndarray:
+    """Return a validated binary vector of the given length, or an all-zero
+    default of that length if vector is None."""
     if vector is None:
         return np.zeros(length, dtype=np.uint8)
     validated = as_binary_vector(vector, name=name)
@@ -37,6 +71,21 @@ def plot_square_toric_complex(
     logical_z: ArrayLike | None = None,
     ax: Axes | None = None,
 ) -> tuple[Figure, Axes]:
+    """Plot a square toric complex, with optional error/syndrome/logical overlays.
+
+    Input objects (``complex_`` and every overlay array) are read only;
+    none are modified. Draws vertices, edges (colored/styled by whichever
+    of x_error/z_error/logical_x/logical_z apply, with Y = x_error AND
+    z_error both set), face centers, and violated-check markers for
+    x_syndrome (open blue circles on vertices) and z_syndrome (open red
+    squares on face centers). Periodic wrap edges are drawn as short
+    stubs exiting the boundary; see the module docstring for why.
+
+    If ``ax`` is given, drawing happens on it directly and its owning
+    Figure is reused (via ``ax.figure``); otherwise a new Figure/Axes
+    pair is created.
+    """
+
     if ax is None:
         fig, ax = plt.subplots()
     else:
@@ -55,6 +104,8 @@ def plot_square_toric_complex(
     used_labels = set()
 
     def _label(text):
+        """Return text the first time it's used, None on repeats -- keeps
+        the legend from showing one duplicate entry per matching edge."""
         if text in used_labels:
             return None
         used_labels.add(text)
