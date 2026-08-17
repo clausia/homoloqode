@@ -1,3 +1,11 @@
+"""Exact, exponential-time (on purpose) distance search for small CSS codes.
+
+Enumerates candidate logical-operator supports in increasing Hamming weight,
+using itertools.combinations, until one is found that commutes with the
+opposite-type check matrix and is not itself a stabilizer. Intended only for
+small examples (see max_qubits); not a scalable distance estimator.
+"""
+
 from dataclasses import dataclass
 from itertools import combinations
 import numpy as np
@@ -7,18 +15,22 @@ from homoloqode.algebra.gf2 import as_binary_vector, is_in_row_span, matmul
 
 class IncompleteSearchError(ValueError):
     """Raised when a distance search did not find a logical operator within
-    max_weight, and max_weight was set below code.n -- so absence is not
+    max_weight, and max_weight was set below code.n : so absence is not
     confirmed, only "not found within the searched range"."""
 
 
 @dataclass(frozen=True, slots=True)
 class CSSDistance:
+    """Exact X, Z, and overall distance of a CSS code, or None where not
+    determined (see exact_distance_x/exact_distance_z/exact_distance)."""
+
     d_x: int | None
     d_z: int | None
     d: int | None
 
 
 def _validate_max_weight(max_weight: int | None) -> None:
+    """Raise ValueError unless max_weight is None or a nonnegative int or a bool (true/false read as 0/1)."""
     if max_weight is not None and isinstance(max_weight, bool):
         raise ValueError("max_weight must be an integer, not a bool.")
     if max_weight is not None and not isinstance(max_weight, int):
@@ -28,6 +40,8 @@ def _validate_max_weight(max_weight: int | None) -> None:
 
 
 def _validate_max_qubits(code: CSSCode, max_qubits: int) -> None:
+    """Raise ValueError unless max_qubits is a nonnegative int and code.n
+    does not exceed it."""
     if isinstance(max_qubits, bool):
         raise ValueError("max_qubits must be an integer, not a bool.")
     if not isinstance(max_qubits, int):
@@ -39,6 +53,14 @@ def _validate_max_qubits(code: CSSCode, max_qubits: int) -> None:
 
 
 def _search(code: CSSCode, *, check_matrix, span_matrix, max_weight: int | None) -> int | None:
+    """Search increasing-weight candidate supports for the first one that
+    commutes with check_matrix and is not in the row span of span_matrix.
+
+    Returns the weight of the first match. Returns None only if max_weight
+    was None (i.e. the search ran exhaustively to code.n) and nothing was
+    found. Raises IncompleteSearchError if max_weight was explicitly below
+    code.n and nothing was found within that bound.
+    """
     search_limit = max_weight if max_weight is not None else code.n
     for weight in range(1, search_limit + 1):
         for qubits in combinations(range(code.n), weight):
@@ -56,7 +78,9 @@ def _search(code: CSSCode, *, check_matrix, span_matrix, max_weight: int | None)
 
 
 def exact_distance_x(code: CSSCode, *, max_weight: int | None = None, max_qubits: int = 24) -> int | None:
-    """ Returns None only if the search was exhaustive (max_weight left at its
+    """Search for d_x = min{|x| : x in ker(H_Z) \\ row(H_X)}.
+
+    Returns None only if the search was exhaustive (max_weight left at its
     default, i.e. searched up to code.n) and no logical operator exists.
     If max_weight is explicitly restricted below code.n and nothing is found,
     raises IncompleteSearchError rather than returning None, since absence
@@ -69,7 +93,11 @@ def exact_distance_x(code: CSSCode, *, max_weight: int | None = None, max_qubits
 
 
 def exact_distance_z(code: CSSCode, *, max_weight: int | None = None, max_qubits: int = 24) -> int | None:
-    
+    """Search for d_z = min{|z| : z in ker(H_X) \\ row(H_Z)}.
+
+    Same None-vs-IncompleteSearchError policy as exact_distance_x; see its
+    docstring.
+    """
 
     _validate_max_weight(max_weight)
     _validate_max_qubits(code, max_qubits)
@@ -77,8 +105,13 @@ def exact_distance_z(code: CSSCode, *, max_weight: int | None = None, max_qubits
 
 
 def exact_distance(code: CSSCode, *, max_weight: int | None = None, max_qubits: int = 24) -> "CSSDistance":
-   
-    
+    """Exact distance of a small CSS code: d = min(d_x, d_z).
+
+     (d,d_x,d_z)==(0,0,0) when code.k == 0
+    (no nontrivial logical operator can exist). Otherwise, see
+    exact_distance_x/exact_distance_z for the None-vs-IncompleteSearchError
+    policy when max_weight is explicitly restricted.
+    """
 
     _validate_max_weight(max_weight)
     _validate_max_qubits(code, max_qubits)
