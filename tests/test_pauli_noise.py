@@ -118,10 +118,16 @@ def test_genuine_excess_over_one_is_rejected() -> None:
         IndependentPauliNoise(p_x=0.5, p_y=0.5, p_z=5e-10)
 
 
-def test_boolean_probability_is_rejected() -> None:
-    """in python, bool is silently treated as 0/1; it must raise."""
+@pytest.mark.parametrize("bool_kwargs", [
+    {"p_x": True, "p_y": 0.0, "p_z": 0.0},
+    {"p_x": 0.0, "p_y": True, "p_z": 0.0},
+    {"p_x": 0.0, "p_y": 0.0, "p_z": True},
+])
+def test_boolean_probability_is_rejected(bool_kwargs: dict[str, object]) -> None:
+    """in python, bool is silently treated as 0/1; it must raise, for
+    p_x, p_y, and p_z alike."""
     with pytest.raises(ValueError, match="bool"):
-        IndependentPauliNoise(p_x=True, p_y=0.0, p_z=0.0)
+        IndependentPauliNoise(**bool_kwargs)
 
 
 @pytest.mark.parametrize("n", [0, -1, -10])
@@ -137,6 +143,13 @@ def test_noninteger_n_is_rejected() -> None:
     noise = IndependentPauliNoise(p_x=0.1, p_y=0.1, p_z=0.1)
     with pytest.raises(ValueError, match="integer"):
         noise.sample(3.5, rng=np.random.default_rng(0))  # type: ignore[arg-type]
+
+
+def test_boolean_n_is_rejected() -> None:
+    """n=True must not be silently treated as n=1; it must raise."""
+    noise = IndependentPauliNoise(p_x=0.1, p_y=0.1, p_z=0.1)
+    with pytest.raises(ValueError, match="bool"):
+        noise.sample(True, rng=np.random.default_rng(0))  # type: ignore[arg-type]
 
 
 def test_missing_generator_is_rejected() -> None:
