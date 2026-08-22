@@ -21,8 +21,21 @@ class IncompleteSearchError(ValueError):
 
 @dataclass(frozen=True, slots=True)
 class CSSDistance:
-    """Exact X, Z, and overall distance of a CSS code, or None where not
-    determined (see exact_distance_x/exact_distance_z/exact_distance)."""
+    """Exact X, Z, and overall distance of a CSS code.
+
+    The three fields are the quotient-space minima
+
+        d_x = min{|x| : x in ker(H_Z) \\ row(H_X)}
+        d_z = min{|z| : z in ker(H_X) \\ row(H_Z)}
+        d   = min(d_x, d_z)
+
+    A field is None where the distance was not determined: all three are
+    None when code.k == 0 (no nontrivial logical operator can exist), and
+    d is None if either component is None. The searches producing these
+    values are exponential in code.n and are bounded by max_weight and
+    max_qubits; see exact_distance_x, exact_distance_z, and
+    exact_distance for the full policy.
+    """
 
     d_x: int | None
     d_z: int | None
@@ -78,13 +91,24 @@ def _search(code: CSSCode, *, check_matrix, span_matrix, max_weight: int | None)
 
 
 def exact_distance_x(code: CSSCode, *, max_weight: int | None = None, max_qubits: int = 24) -> int | None:
-    """Search for d_x = min{|x| : x in ker(H_Z) \\ row(H_X)}.
+    """Search for the exact X distance
 
-    Returns None only if the search was exhaustive (max_weight left at its
-    default, i.e. searched up to code.n) and no logical operator exists.
-    If max_weight is explicitly restricted below code.n and nothing is found,
-    raises IncompleteSearchError rather than returning None, since absence
-    is not confirmed in that case.
+        d_x = min{|x| : x in ker(H_Z) \\ row(H_X)}
+
+    i.e. the minimum Hamming weight of a vector that commutes with every
+    Z check but is not itself an X stabilizer.
+
+    Runtime is exponential in code.n: the search enumerates every support
+    of each weight in turn via itertools.combinations, so it is intended
+    only for small codes. max_qubits (default 24) guards against
+    accidental use on codes too large to finish.
+
+    max_weight bounds the search. Left at its default (None) the search
+    runs exhaustively up to code.n, and a None return then means no
+    logical operator exists (confirmed absence). If max_weight is
+    explicitly restricted below code.n and nothing is found, raises
+    IncompleteSearchError rather than returning None, since absence is
+    not confirmed in that case.
     """
 
     _validate_max_weight(max_weight)
@@ -93,10 +117,17 @@ def exact_distance_x(code: CSSCode, *, max_weight: int | None = None, max_qubits
 
 
 def exact_distance_z(code: CSSCode, *, max_weight: int | None = None, max_qubits: int = 24) -> int | None:
-    """Search for d_z = min{|z| : z in ker(H_X) \\ row(H_Z)}.
+    """Search for the exact Z distance
 
-    Same None-vs-IncompleteSearchError policy as exact_distance_x; see its
-    docstring.
+        d_z = min{|z| : z in ker(H_X) \\ row(H_Z)}
+
+    i.e. the minimum Hamming weight of a vector that commutes with every
+    X check but is not itself a Z stabilizer.
+
+    Runtime is exponential in code.n, exactly as for exact_distance_x;
+    max_qubits (default 24) guards against accidental use on codes too
+    large to finish. The None-vs-IncompleteSearchError policy for
+    max_weight is identical to exact_distance_x; see its docstring.
     """
 
     _validate_max_weight(max_weight)
@@ -105,12 +136,21 @@ def exact_distance_z(code: CSSCode, *, max_weight: int | None = None, max_qubits
 
 
 def exact_distance(code: CSSCode, *, max_weight: int | None = None, max_qubits: int = 24) -> "CSSDistance":
-    """Exact distance of a small CSS code: d = min(d_x, d_z).
+    """Exact distance of a small CSS code, as a CSSDistance:
 
-     (d,d_x,d_z)==(0,0,0) when code.k == 0
-    (no nontrivial logical operator can exist). Otherwise, see
-    exact_distance_x/exact_distance_z for the None-vs-IncompleteSearchError
-    policy when max_weight is explicitly restricted.
+        d_x = min{|x| : x in ker(H_Z) \\ row(H_X)}
+        d_z = min{|z| : z in ker(H_X) \\ row(H_Z)}
+        d   = min(d_x, d_z)
+
+    Runtime is exponential in code.n (see exact_distance_x); max_qubits
+    (default 24) guards against accidental use on codes too large for the
+    search to finish.
+
+    When code.k == 0 no nontrivial logical operator can exist, so all
+    three fields of the returned CSSDistance are None and no search is
+    performed. Otherwise, see exact_distance_x/exact_distance_z for the
+    None-vs-IncompleteSearchError policy when max_weight is explicitly
+    restricted below code.n.
     """
 
     _validate_max_weight(max_weight)

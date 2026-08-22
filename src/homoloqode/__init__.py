@@ -4,11 +4,11 @@ from homoloqode.codes import (
     CSSCode,
     CSSDistance,
     CSSSyndrome,
+    IncompleteSearchError,
     LogicalBasis,
     exact_distance,
     exact_distance_x,
     exact_distance_z,
-    IncompleteSearchError
 )
 from homoloqode.topology import (
     CellComplex2D,
@@ -25,6 +25,7 @@ __all__ = [
     "CSSCode",
     "CSSDistance",
     "CSSSyndrome",
+    "IncompleteSearchError",
     "CellComplex2D",
     "ChainComplex2D",
     "Edge",
@@ -37,5 +38,4 @@ __all__ = [
     "exact_distance_z",
     "square_toric_complex",
     "toric_code",
-    IncompleteSearchError,
 ]

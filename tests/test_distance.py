@@ -3,6 +3,7 @@
 import numpy as np
 import pytest
 
+import homoloqode
 from homoloqode import CSSCode, exact_distance, toric_code, exact_distance_x, exact_distance_z, IncompleteSearchError
 from homoloqode.algebra.gf2 import is_in_row_span
 
@@ -107,3 +108,43 @@ def test_search_excludes_stabilizers_z() -> None:
 
     assert result != int(stabilizer_row.sum())
     assert result == 2
+
+def test_all_entries_are_strings() -> None:
+    """Every item in homoloqode.__all__ must be a string; a bare class
+    object there raises TypeError on `from homoloqode import *`."""
+    non_strings = [item for item in homoloqode.__all__ if not isinstance(item, str)]
+    assert non_strings == []
+
+def test_every_submodule_all_entries_are_strings() -> None:
+    """The same must hold for every submodule's __all__, not just the
+    top-level package, so the bug can't reappear one level down."""
+    import importlib, pkgutil
+
+    problems = []
+    module_names = ["homoloqode"] + [
+        m.name for m in pkgutil.walk_packages(homoloqode.__path__, "homoloqode.")
+    ]
+    for name in module_names:
+        try:
+            module = importlib.import_module(name)
+        except Exception:
+            continue
+        for item in getattr(module, "__all__", []):
+            if not isinstance(item, str):
+                problems.append((name, item))
+    assert problems == []
+
+def test_star_import_works() -> None:
+    """`from homoloqode import *` must not raise, and must expose the
+    distance API including IncompleteSearchError."""
+    namespace: dict[str, object] = {}
+    exec("from homoloqode import *", namespace)
+    for name in ("exact_distance", "exact_distance_x", "exact_distance_z",
+                 "CSSDistance", "IncompleteSearchError"):
+        assert name in namespace
+
+def test_all_entries_are_actually_importable() -> None:
+    """Every name listed in homoloqode.__all__ must really exist on the
+    package, so __all__ can't drift out of sync with the real exports."""
+    for name in homoloqode.__all__:
+        assert hasattr(homoloqode, name), f"{name} is in __all__ but not importable"
