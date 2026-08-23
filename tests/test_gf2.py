@@ -66,4 +66,3 @@ def test_inverse_is_exact_over_binary_field() -> None:
 def test_nonbinary_input_is_rejected() -> None:
     with pytest.raises(ValueError, match="only 0 and 1"):
         rank([[1, 2]])
-
