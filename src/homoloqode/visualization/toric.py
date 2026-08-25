@@ -27,6 +27,16 @@ both jump exactly 1 unit and are not distinguishable by coordinates alone,
 so the id, not the geometry, is the source of truth. This id convention
 (e_h/e_v/v[x,y]/f[x,y]) is specific to square_toric_complex; this function
 is scoped to that generator only, not to CellComplex2D in general.
+
+Face centers: derived directly from the f[x,y] id as (x+0.5, y+0.5), not
+by averaging the coordinates of the face's touched vertices. Averaging
+breaks for any face that crosses the periodic boundary: for L=3, f[2,0]'s
+vertices sit at x=2 and x=0, and averaging gives x=(2+0+2+0)/4=1.0 instead
+of the correct x=2.5 -- pulling the center into the interior (and, for
+f[2,2] specifically, landing it exactly on top of vertex v[1,1]). Deriving
+from the id directly avoids this, and is consistent with the same
+"extend past L rather than wrap to 0" convention already used for wrap
+edges above.
 """
 
 from __future__ import annotations
@@ -43,7 +53,7 @@ from homoloqode.algebra.gf2 import as_binary_vector
 
 
 def _parse_grid_position(edge_id: str) -> tuple[int, int]:
-    """Parse the exact (x, y) grid position out of an e_h[x,y]/e_v[x,y] id."""
+    """Parse the exact (x, y) grid position out of an e_h[x,y]/e_v[x,y]/f[x,y] id."""
     inner = edge_id[edge_id.index("[") + 1 : edge_id.index("]")]
     x_str, y_str = inner.split(",")
     return int(x_str), int(y_str)      # well use this later to determine if the edge is in the end aka if it is wrap around
@@ -79,7 +89,9 @@ def plot_square_toric_complex(
     z_error both set), face centers, and violated-check markers for
     x_syndrome (open blue circles on vertices) and z_syndrome (open red
     squares on face centers). Periodic wrap edges are drawn as short
-    stubs exiting the boundary; see the module docstring for why.
+    stubs exiting the boundary; face centers are derived from the f[x,y]
+    id, not averaged from vertex coordinates; see the module docstring
+    for why both are necessary.
 
     If ``ax`` is given, drawing happens on it directly and its owning
     Figure is reused (via ``ax.figure``); otherwise a new Figure/Axes
@@ -153,16 +165,10 @@ def plot_square_toric_complex(
         ax.scatter(violated_vx, violated_vy, s=250, facecolors="none", edgecolors="blue",
                     linewidth=2, marker="o", zorder=4, label=_label("violated X-check"))
 
-    edge_by_id = {e.id: e for e in complex_.edges}
     face_centers = []
     for f in complex_.faces:
-        touched = set()
-        for oe in f.boundary:
-            fe = edge_by_id[oe.edge_id]
-            touched.add(fe.source)
-            touched.add(fe.target)
-        pts = [coords[v] for v in touched]
-        face_centers.append((sum(p[0] for p in pts) / len(pts), sum(p[1] for p in pts) / len(pts)))
+        fx, fy = _parse_grid_position(f.id)
+        face_centers.append((fx + 0.5, fy + 0.5))
 
     ax.scatter([c[0] for c in face_centers], [c[1] for c in face_centers],
                 color="lightgray", s=15, zorder=2, label=_label("face center"))
