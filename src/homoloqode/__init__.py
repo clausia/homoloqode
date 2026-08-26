@@ -20,22 +20,24 @@ from homoloqode.topology import (
     square_toric_complex,
     toric_code,
 )
+from homoloqode.visualization import plot_square_toric_complex
 
 __all__ = [
     "CSSCode",
     "CSSDistance",
     "CSSSyndrome",
-    "IncompleteSearchError",
     "CellComplex2D",
     "ChainComplex2D",
     "Edge",
     "Face",
+    "IncompleteSearchError",
     "LogicalBasis",
     "OrientedEdge",
     "Vertex",
     "exact_distance",
     "exact_distance_x",
     "exact_distance_z",
+    "plot_square_toric_complex",
     "square_toric_complex",
     "toric_code",
 ]
