@@ -10,6 +10,7 @@ from homoloqode.algebra.gf2 import (
     rank,
     row_space_basis,
     rref,
+    is_in_row_span
 )
 
 __all__ = [
@@ -22,5 +23,6 @@ __all__ = [
     "rank",
     "row_space_basis",
     "rref",
+    "is_in_row_span"
 ]
 

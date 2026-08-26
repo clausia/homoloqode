@@ -71,6 +71,9 @@ homoloQode/
 ├── src/homoloqode/
 │   ├── algebra/
 │   ├── codes/
+│   ├── decoders/
+│   ├── noise/
+│   ├── experiments/
 │   ├── topology/
 │   ├── cohomology/
 │   ├── khovanov/
@@ -244,17 +247,25 @@ The first implementation scaffold is now available. It includes:
 * construction and validation of $H_X$ and $H_Z$;
 * CSS syndromes and Pauli stabilizer strings;
 * paired logical $X$ and $Z$ representatives;
+* reproducible independent Pauli noise sampling;
+* exhaustive minimum-weight decoding for small CSS codes;
+* classification of residual stabilizer successes, logical failures, and
+  invalid corrections;
+* seeded single-trial and aggregate quantum-memory experiment APIs;
 * automated tests for the size-two and size-three toric codes;
 * an [explanatory notebook](notebooks/01_toric_code_from_boundary_maps.ipynb)
   deriving a toric code from boundary maps;
 * ideal Qiskit syndrome-extraction circuits and a
-  [comparison notebook](notebooks/02_algebraic_vs_qiskit_syndromes.ipynb).
+  [comparison notebook](notebooks/02_algebraic_vs_qiskit_syndromes.ipynb);
+* continuous integration on Windows and Ubuntu that runs the test suite and
+  executes the committed notebooks.
 
 The toric-code construction itself is implemented, but the complete MVP is not
-finished. Exact code-distance computation, noise sampling, decoding,
-end-to-end experiments, and geometric visualizations remain to be added. The
-remaining work is tracked as GitHub issues and summarized in the
-[MVP and project roadmap](docs/mvp_roadmap.md). The API remains experimental.
+finished. Exact code-distance computation and geometric visualization are in
+review. The documented noise-and-decoding experiment notebook and final release
+audit remain to be completed. The remaining work is tracked as GitHub issues
+and summarized in the [MVP and project roadmap](docs/mvp_roadmap.md). The API
+remains experimental.
 
 ## License
 

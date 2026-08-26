@@ -44,7 +44,7 @@ $$
 H_XH_Z^T=\partial_1\partial_2=0.
 $$
 
-The three core layers have distinct responsibilities:
+The core and experiment layers have distinct responsibilities:
 
 * `homoloqode.topology` stores cells, attaching data, boundary maps, and
   reference cellulations.
@@ -52,6 +52,14 @@ The three core layers have distinct responsibilities:
   real-valued rank and solver functions are not used for these calculations.
 * `homoloqode.codes` stores abstract CSS codes and derives syndromes,
   stabilizers, and paired logical operators.
+* `homoloqode.decoders` consumes code objects and explicit syndromes. Its
+  exhaustive decoder is a deterministic small-code reference implementation,
+  with explicit guards around exponential searches.
+* `homoloqode.noise` samples reproducible binary Pauli errors from an explicit
+  NumPy random generator.
+* `homoloqode.experiments` coordinates noise, algebraic syndrome calculation,
+  decoding, and residual classification without owning any of those
+  algorithms.
 
 Qiskit objects do not appear in these layers.
 
@@ -74,11 +82,38 @@ src/homoloqode/
 ├── algebra/          exact linear algebra over F_2
 ├── topology/         cells, chain complexes, and cellulation factories
 ├── codes/            CSS code objects and logical operators
+├── decoders/         deterministic reference decoders for small codes
+├── noise/            reproducible physical Pauli noise models
+├── experiments/      reusable trial and aggregate experiment APIs
 ├── cohomology/       future cup products and cohomology operations
 ├── khovanov/         future graded/Khovanov chain-complex adapters
 ├── transformations/ future homology-preserving transformations
 └── integrations/     required Qiskit layer and future external adapters
 ```
+
+## Memory-experiment boundary
+
+The MVP experiment pipeline is
+
+```text
+CSSCode + IndependentPauliNoise + CSSDecoder
+    -> sampled PauliError
+    -> CSSSyndrome
+    -> CSSDecodeResult
+    -> ResidualClass
+    -> MemoryTrialResult / MemoryExperimentResult
+```
+
+A decoder crosses this boundary as a typed callable from a `CSSCode` and
+`CSSSyndrome` to a `CSSDecodeResult`. The default is the exhaustive small-code
+decoder, while configured or future decoders can be supplied without changing
+the experiment loop.
+
+The experiment layer creates one seeded `numpy.random.Generator` per repeated
+experiment and reuses it for every trial. Aggregate results retain only
+mutually exclusive counts. Decoder exceptions, including bounded-search
+failures, propagate to the caller rather than being counted as logical
+failures. Plotting and notebook-specific analysis remain outside this layer.
 
 ## Extension boundaries
 
