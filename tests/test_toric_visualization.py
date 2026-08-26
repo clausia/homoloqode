@@ -197,25 +197,27 @@ def test_logical_operators_render_with_distinct_line_styles() -> None:
 
 
 def test_boundary_face_centers_extend_past_l_not_averaged_into_interior() -> None:
-    """A face crossing the periodic boundary (e.g. f[2,0] for L=3) must
-    have its center derived from the id as (x+0.5, y+0.5), extending past
-    L, not pulled into the interior by averaging wrapped vertex
-    coordinates. Regression test for the reported (1.0,0.5)/(0.5,1.0)/
-    (1.0,1.0) bug, where the last value coincided with an actual vertex."""
-    size = 3
-    complex_ = square_toric_complex(size)
+    """A face crossing the periodic boundary (e.g. f[2,0] for L=3) must be
+    RENDERED with its center at (x+0.5, y+0.5), extending past L, not
+    pulled into the interior by averaging wrapped vertex coordinates.
 
-    boundary_face_ids = {"f[2,0]": (2.5, 0.5), "f[0,2]": (0.5, 2.5), "f[2,2]": (2.5, 2.5)}
-    face_by_id = {f.id: f for f in complex_.faces}
+    Inspects the actual matplotlib collection's rendered offsets (not a
+    value recomputed from _parse_grid_position), so this test would fail
+    if plot_square_toric_complex's face-center logic regressed, even if
+    _parse_grid_position itself stayed correct."""
+    complex_ = square_toric_complex(3)
+    fig, ax = plot_square_toric_complex(complex_)
 
-    for face_id, expected_center in boundary_face_ids.items():
-        fx, fy = _parse_grid_position(face_by_id[face_id].id)
-        actual_center = (fx + 0.5, fy + 0.5)
-        assert actual_center == expected_center
+    # with no syndrome overlays, collections[0] is vertices and
+    # collections[1] is face centers -- matches
+    # test_base_collection_count_with_no_overlays' assumption of exactly 2.
+    rendered_offsets = {tuple(point) for point in ax.collections[1].get_offsets()}
 
-    # the specific reported failure: f[2,2]'s (buggy) averaged center
-    # coincided exactly with vertex v[1,1]; the fixed center must not.
+    expected_boundary_centers = {(2.5, 0.5), (0.5, 2.5), (2.5, 2.5)}
+    assert expected_boundary_centers.issubset(rendered_offsets)
+
+    # the specific reported failure: the old buggy center for f[2,2]
+    # coincided exactly with vertex v[1,1]; that point must not appear
+    # among the rendered face centers.
     coords = {v.id: v.coordinates for v in complex_.vertices}
-    fx, fy = _parse_grid_position("f[2,2]")
-    fixed_center = (fx + 0.5, fy + 0.5)
-    assert fixed_center != coords["v[1,1]"]
+    assert coords["v[1,1]"] not in rendered_offsets
