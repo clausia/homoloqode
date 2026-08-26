@@ -7,7 +7,7 @@ name = "homoloqode"
 version = "0.1.0"
 description = "Construct homological CSS codes from finite chain complexes."
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 license = { file = "LICENSE" }
 authors = [
     { name = "Claudia Zendejas-Morales" },
