@@ -67,7 +67,8 @@ homoloQode/
 ├── references/
 ├── notebooks/
 │   ├── 01_toric_code_from_boundary_maps.ipynb
-│   └── 02_algebraic_vs_qiskit_syndromes.ipynb
+│   ├── 02_algebraic_vs_qiskit_syndromes.ipynb
+│   └── 03_noise_and_decoding.ipynb
 ├── src/homoloqode/
 │   ├── algebra/
 │   ├── codes/
@@ -78,7 +79,8 @@ homoloQode/
 │   ├── cohomology/
 │   ├── khovanov/
 │   ├── transformations/
-│   └── integrations/
+│   ├── integrations/
+│   └── visualization/
 └── tests/
 ```
 
@@ -257,6 +259,9 @@ The first implementation scaffold is now available. It includes:
   deriving a toric code from boundary maps;
 * ideal Qiskit syndrome-extraction circuits and a
   [comparison notebook](notebooks/02_algebraic_vs_qiskit_syndromes.ipynb);
+* an [experiment notebook](notebooks/03_noise_and_decoding.ipynb) sweeping
+  physical error probability against logical failure rate for the
+  size-two and size-three toric codes;
 * continuous integration on Windows and Ubuntu that runs the test suite and
   executes the committed notebooks.
 
