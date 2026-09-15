@@ -79,7 +79,8 @@ homoloQode/
 │   ├── cohomology/
 │   ├── khovanov/
 │   ├── transformations/
-│   └── integrations/
+│   ├── integrations/
+│   └── visualization/
 └── tests/
 ```
 
