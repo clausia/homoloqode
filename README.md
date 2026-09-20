@@ -149,10 +149,10 @@ python -m pip install -e .
 This command is independent of how the Python environment was created.
 
 The package requirements are declared in `pyproject.toml`. The current minimums
-are Jupyter 1.1, NumPy 2.5, Qiskit 2.5 with visualization support, and pytest
-9.1. These are required project dependencies. Qiskit is kept in a separate
-integration layer from the mathematical core, but it is part of the required
-MVP.
+are Jupyter 1.1, Matplotlib 3.10, NumPy 2.5, Qiskit 2.5 with visualization
+support, and pytest 9.1. These are required project dependencies. Qiskit is kept
+in a separate integration layer from the mathematical core, but it is part of
+the required MVP.
 
 ### 3. Run a notebook
 
@@ -229,7 +229,7 @@ The project is organized around the following concepts:
 * **Homology classes**
 * **Toric and surface codes**
 
-A shared glossary will be developed in [`docs/glossary.md`](docs/glossary.md).
+The shared terminology is maintained in [`docs/glossary.md`](docs/glossary.md).
 
 ## Reading list
 
@@ -249,6 +249,7 @@ The first implementation scaffold is now available. It includes:
 * construction and validation of $H_X$ and $H_Z$;
 * CSS syndromes and Pauli stabilizer strings;
 * paired logical $X$ and $Z$ representatives;
+* exact X, Z, and overall distance searches for small CSS codes;
 * reproducible independent Pauli noise sampling;
 * exhaustive minimum-weight decoding for small CSS codes;
 * classification of residual stabilizer successes, logical failures, and
@@ -262,15 +263,14 @@ The first implementation scaffold is now available. It includes:
 * an [experiment notebook](notebooks/03_noise_and_decoding.ipynb) sweeping
   physical error probability against logical failure rate for the
   size-two and size-three toric codes;
+* periodic-lattice visualizations with error, syndrome, and logical overlays;
 * continuous integration on Windows and Ubuntu that runs the test suite and
   executes the committed notebooks.
 
-The toric-code construction itself is implemented, but the complete MVP is not
-finished. Exact code-distance computation and geometric visualization are in
-review. The documented noise-and-decoding experiment notebook and final release
-audit remain to be completed. The remaining work is tracked as GitHub issues
-and summarized in the [MVP and project roadmap](docs/mvp_roadmap.md). The API
-remains experimental.
+All feature and infrastructure work packages from MVP-01 through MVP-09 are
+implemented. MVP-10 is the final integration, documentation, and release audit.
+The remaining work is tracked as GitHub issues and summarized in the
+[MVP and project roadmap](docs/mvp_roadmap.md). The API remains experimental.
 
 ## License
 

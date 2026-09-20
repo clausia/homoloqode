@@ -3,6 +3,7 @@ import pytest
 
 from homoloqode.algebra import (
     inverse,
+    is_in_row_span,
     matmul,
     null_space_basis,
     rank,
@@ -66,3 +67,43 @@ def test_inverse_is_exact_over_binary_field() -> None:
 def test_nonbinary_input_is_rejected() -> None:
     with pytest.raises(ValueError, match="only 0 and 1"):
         rank([[1, 2]])
+
+
+def test_row_span_membership_handles_dependent_rows() -> None:
+    matrix = np.array(
+        [
+            [1, 0, 1],
+            [0, 1, 1],
+            [1, 1, 0],
+        ],
+        dtype=np.uint8,
+    )
+
+    assert is_in_row_span([1, 1, 0], matrix)
+    assert not is_in_row_span([0, 0, 1], matrix)
+
+
+def test_row_span_membership_handles_empty_basis() -> None:
+    matrix = np.zeros((0, 3), dtype=np.uint8)
+
+    assert is_in_row_span([0, 0, 0], matrix)
+    assert not is_in_row_span([1, 0, 0], matrix)
+
+
+def test_row_span_membership_rejects_length_mismatch() -> None:
+    with pytest.raises(ValueError, match="got 2 and 3"):
+        is_in_row_span([1, 0], np.zeros((0, 3), dtype=np.uint8))
+
+
+@pytest.mark.parametrize(
+    ("vector", "matrix"),
+    [
+        ([2, 0], [[1, 0]]),
+        ([1, 0], [[1, 2]]),
+    ],
+)
+def test_row_span_membership_rejects_nonbinary_input(
+    vector: list[int], matrix: list[list[int]]
+) -> None:
+    with pytest.raises(ValueError, match="only 0 and 1"):
+        is_in_row_span(vector, matrix)

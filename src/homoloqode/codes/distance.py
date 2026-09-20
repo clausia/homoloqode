@@ -43,7 +43,12 @@ class CSSDistance:
 
 
 def _validate_max_weight(max_weight: int | None) -> None:
-    """Raise ValueError unless max_weight is None or a nonnegative int or a bool (true/false read as 0/1)."""
+    """Validate an optional nonnegative search-weight bound.
+
+    ``None`` selects an exhaustive search through ``code.n`` at the call site.
+    Explicit bounds must be integers greater than or equal to zero. Booleans
+    are rejected even though :class:`bool` is a subclass of :class:`int`.
+    """
     if max_weight is not None and isinstance(max_weight, bool):
         raise ValueError("max_weight must be an integer, not a bool.")
     if max_weight is not None and not isinstance(max_weight, int):

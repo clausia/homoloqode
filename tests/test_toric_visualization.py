@@ -13,7 +13,6 @@ import pytest
 
 from homoloqode import square_toric_complex, toric_code
 from homoloqode.visualization import plot_square_toric_complex
-from homoloqode.visualization.toric import _parse_grid_position
 
 
 @pytest.fixture(autouse=True)
@@ -67,6 +66,54 @@ def test_syndrome_overlays_add_collections() -> None:
     )
     # base 2, plus at least one violated-check marker collection
     assert len(ax.collections) > 2
+
+
+def test_both_syndrome_types_are_rendered() -> None:
+    complex_ = square_toric_complex(3)
+    x_syndrome = np.zeros(len(complex_.vertices), dtype=np.uint8)
+    z_syndrome = np.zeros(len(complex_.faces), dtype=np.uint8)
+    x_syndrome[0] = 1
+    z_syndrome[0] = 1
+
+    _, ax = plot_square_toric_complex(
+        complex_,
+        x_syndrome=x_syndrome,
+        z_syndrome=z_syndrome,
+    )
+
+    labels = set(ax.get_legend_handles_labels()[1])
+    assert "violated X-check" in labels
+    assert "violated Z-check" in labels
+
+
+@pytest.mark.parametrize(
+    ("x_bit", "z_bit", "expected_color", "expected_label"),
+    [
+        (1, 0, "blue", "X-error"),
+        (0, 1, "red", "Z-error"),
+        (1, 1, "purple", "Y-error"),
+    ],
+)
+def test_pauli_error_overlays_use_documented_styles(
+    x_bit: int,
+    z_bit: int,
+    expected_color: str,
+    expected_label: str,
+) -> None:
+    complex_ = square_toric_complex(2)
+    x_error = np.zeros(len(complex_.edges), dtype=np.uint8)
+    z_error = np.zeros(len(complex_.edges), dtype=np.uint8)
+    x_error[0] = x_bit
+    z_error[0] = z_bit
+
+    _, ax = plot_square_toric_complex(
+        complex_,
+        x_error=x_error,
+        z_error=z_error,
+    )
+
+    assert ax.lines[0].get_color() == expected_color
+    assert ax.lines[0].get_label() == expected_label
 
 
 @pytest.mark.parametrize("size", [2, 3])
@@ -155,8 +202,7 @@ def test_wrap_edges_are_drawn_as_short_stubs_not_long_lines() -> None:
     long : the actual geometric proof the wraparound-stub fix works,
     not just that nothing crashed."""
     complex_ = square_toric_complex(3)
-    coords = {v.id: v.coordinates for v in complex_.vertices}
-    fig, ax = plot_square_toric_complex(complex_)
+    _, ax = plot_square_toric_complex(complex_)
 
     for line in ax.lines:
         xdata, ydata = line.get_data()

@@ -1,11 +1,13 @@
-"""Tests fr homoloqode.codes.distance: exact_distance """
+"""Tests for exact small-code CSS distance calculations."""
+
+from dataclasses import FrozenInstanceError
 
 import numpy as np
 import pytest
 
 import homoloqode
 from homoloqode import CSSCode, exact_distance, toric_code, exact_distance_x, exact_distance_z, IncompleteSearchError
-from homoloqode.algebra.gf2 import is_in_row_span
+from homoloqode.algebra import is_in_row_span
 
 def test_size_two_toric_distance() -> None:
     """toric_code(2) is [[8,2,2]]: d_x = d_z = d = 2."""
@@ -26,11 +28,28 @@ def test_k_zero_returns_all_none() -> None:
     result = exact_distance(code)
     assert (result.d_x, result.d_z, result.d) == (None, None, None)
 
+
+def test_distance_result_is_immutable() -> None:
+    result = exact_distance(toric_code(2))
+
+    with pytest.raises(FrozenInstanceError):
+        result.d = 3  # type: ignore[misc]
+
+
 def test_max_qubits_guard_rejects_large_codes() -> None:
     """A code larger than max_qubits must be rejected before any search."""
     code = toric_code(3)
     with pytest.raises(ValueError, match="max_qubits"):
         exact_distance(code, max_qubits=10)
+
+
+@pytest.mark.parametrize("max_qubits", [-1, True, 1.5])
+def test_invalid_max_qubits_is_rejected(max_qubits: object) -> None:
+    with pytest.raises(ValueError, match="max_qubits"):
+        exact_distance(
+            toric_code(2),
+            max_qubits=max_qubits,  # type: ignore[arg-type]
+        )
 
 def test_max_weight_too_small_raises_incomplete_search_error() -> None:
     """If max_weight is too small to find the real distance, the search
@@ -43,31 +62,27 @@ def test_max_weight_large_enough_finds_distance() -> None:
     result = exact_distance(toric_code(2), max_weight=2)
     assert (result.d_x, result.d_z, result.d) == (2, 2, 2)
 
+
+@pytest.mark.parametrize("max_weight", [-1, True, 1.5])
+def test_invalid_max_weight_is_rejected(max_weight: object) -> None:
+    with pytest.raises(ValueError, match="max_weight"):
+        exact_distance(
+            toric_code(2),
+            max_weight=max_weight,  # type: ignore[arg-type]
+        )
+
+
+def test_zero_max_weight_is_a_valid_but_incomplete_bound() -> None:
+    with pytest.raises(IncompleteSearchError):
+        exact_distance(toric_code(2), max_weight=0)
+
+
 def test_stabilizer_row_is_excluded_via_row_span() -> None:
     """A genuine stabilizer row must be detected as lying in row(H_X)."""
     code = toric_code(2)
     stabilizer_row = code.hx[0]
 
     assert is_in_row_span(stabilizer_row, code.hx)
-
-def test_is_in_row_span_true_for_member() -> None:
-    """A vector equal to the sum of matrix rows must be reported as a member."""
-    matrix = np.array([[1, 0, 0], [0, 1, 0]])
-    vector = np.array([1, 1, 0])
-    assert is_in_row_span(vector, matrix)
-
-def test_is_in_row_span_false_for_nonmember() -> None:
-    """A vector outside the row span must be reported as not a member."""
-    matrix = np.array([[1, 0, 0], [0, 1, 0]])
-    vector = np.array([0, 0, 1])
-    assert not is_in_row_span(vector, matrix)
-
-def test_is_in_row_span_rejects_length_mismatch() -> None:
-    """A vector whose length doesn't match the matrix column count, must raise."""
-    matrix = np.array([[1, 0, 0], [0, 1, 0]])
-    vector = np.array([1, 0])
-    with pytest.raises(ValueError, match="length"):
-        is_in_row_span(vector, matrix)
 
 def test_nonbinary_check_matrix_rejected_by_csscode() -> None:
     """CSSCode itself must reject a non-binary check matrix; distance code
