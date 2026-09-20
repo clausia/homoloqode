@@ -21,7 +21,7 @@ from homoloqode.codes import CSSCode, CSSSyndrome
 
 @dataclass(frozen=True, slots=True)
 class QiskitSyndromeCircuits:
-    """Circuits measuring the X- and Z-check syndromes of one Pauli error."""
+    """Ideal circuits ordered like the source code's X and Z check rows."""
 
     x_checks: QuantumCircuit
     z_checks: QuantumCircuit
@@ -29,7 +29,12 @@ class QiskitSyndromeCircuits:
 
 @dataclass(frozen=True, slots=True)
 class QiskitSyndromeResult:
-    """Ideal simulator result in the same check order used by ``CSSCode``."""
+    """Ideal result in the source code's X-check and Z-check row orders.
+
+    Qiskit's displayed bitstrings remain available in ``x_check_counts`` and
+    ``z_check_counts``. ``syndrome`` converts them to increasing matrix-row
+    order.
+    """
 
     circuits: QiskitSyndromeCircuits
     syndrome: CSSSyndrome
@@ -142,6 +147,8 @@ def build_syndrome_circuits(
     zero syndrome before applying the error. The Z-check circuit analogously
     starts in ``|0>^n``. This makes the circuit results directly comparable to
     ``H_X e_Z`` and ``H_Z e_X`` without requiring encoded-state preparation.
+    Data-qubit indices follow ``code.qubit_labels``; classical-bit indices
+    follow the corresponding check-row order.
     """
 
     x = _error_vector(x_error, length=code.n, name="X-error support")
@@ -189,7 +196,7 @@ def simulate_syndrome(
     shots: int = 128,
     seed: int = 12345,
 ) -> QiskitSyndromeResult:
-    """Run ideal local simulations and return a syndrome in algebraic order."""
+    """Run ideal simulations and return syndrome vectors in check-row order."""
 
     if not isinstance(shots, int) or isinstance(shots, bool) or shots < 1:
         raise ValueError("shots must be a positive integer.")

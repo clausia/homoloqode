@@ -30,7 +30,7 @@ class DecodingFailure(RuntimeError):
 
 @dataclass(frozen=True, slots=True)
 class BinaryCorrection:
-    """An immutable binary correction support and its Hamming weight."""
+    """An immutable correction support in code-qubit order and its weight."""
 
     support: BinaryArray
     weight: int = field(init=False)
@@ -45,8 +45,9 @@ class BinaryCorrection:
 class CSSDecodeResult:
     """Minimum-weight X and Z corrections for a CSS syndrome.
 
-    ``x_correction`` reproduces the Z-check syndrome through ``H_Z``;
-    ``z_correction`` reproduces the X-check syndrome through ``H_X``.
+    Support positions follow ``code.qubit_labels``. ``x_correction`` reproduces
+    the Z-check syndrome through ``H_Z``; ``z_correction`` reproduces the
+    X-check syndrome through ``H_X``.
     """
 
     x_correction: BinaryCorrection
@@ -105,7 +106,8 @@ def decode_syndrome(
     X- and Z-error components are decoded independently over
     :math:`\\mathbb F_2`.  Exhaustive enumeration makes runtime exponential in
     ``code.n``; ``max_qubits`` and ``max_weight`` bound that work.  Degenerate
-    equal-weight corrections are resolved by qubit-index lexicographic order.
+    equal-weight corrections are resolved by qubit-index lexicographic order,
+    where indices follow ``code.qubit_labels``.
 
     Raises:
         ValueError: If a bound or syndrome length is invalid.

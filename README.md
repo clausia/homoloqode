@@ -12,7 +12,7 @@ Topological and homological quantum codes provide a natural bridge between algeb
 
 Many introductory quantum-computing projects implement a single known algorithm or a small code example. In contrast, **homoloQode** aims to develop a more structural and reusable framework for constructing and studying small homological quantum codes from their underlying mathematical data.
 
-The project is currently in active MVP development.
+Version 0.1.0 is the first MVP release candidate. Its API remains experimental.
 
 ## Project goals
 
@@ -57,12 +57,14 @@ Planned post-MVP directions include:
 ```text
 homoloQode/
 ├── README.md
+├── CHANGELOG.md
 ├── pyproject.toml
 ├── LICENSE
 ├── docs/
 │   ├── architecture.md
 │   ├── glossary.md
 │   ├── mvp_roadmap.md
+│   ├── release.md
 │   └── reading_notes.md
 ├── references/
 ├── notebooks/
@@ -211,7 +213,39 @@ assert code.k == 2
 assert chain_complex.betti_1 == 2
 ```
 
-### 5. Run the tests
+### 5. Run an error-correction cycle
+
+This deterministic example creates a toric code, specifies an X error,
+computes its syndrome, decodes it, and classifies the residual:
+
+```python
+import numpy as np
+
+from homoloqode import toric_code
+from homoloqode.decoders import ResidualClass, classify_residual, decode_syndrome
+from homoloqode.noise import PauliError
+
+code = toric_code(2)
+x_support = np.zeros(code.n, dtype=np.uint8)
+x_support[0] = 1
+error = PauliError(x=x_support, z=np.zeros(code.n, dtype=np.uint8))
+
+syndrome = code.syndrome(x_error=error.x, z_error=error.z)
+correction = decode_syndrome(code, syndrome)
+residual = classify_residual(
+    code,
+    x_residual=error.x ^ correction.x_correction.support,
+    z_residual=error.z ^ correction.z_correction.support,
+)
+
+print(residual.value)  # stabilizer
+print(residual is ResidualClass.STABILIZER)  # True
+```
+
+The decoder's correction need not equal the physical error. Success means that
+their residual is a stabilizer, so it acts trivially on encoded information.
+
+### 6. Run the tests
 
 After installing the `dev` extra, run the test suite and enforce complete line
 and branch coverage with:
@@ -249,7 +283,7 @@ It includes a small set of core references on stabilizer/CSS codes, topological 
 
 ## Development status
 
-The first implementation scaffold is now available. It includes:
+The MVP implementation includes:
 
 * exact binary linear algebra over $\mathbb F_2$;
 * finite two-dimensional cell complexes;
@@ -273,13 +307,34 @@ The first implementation scaffold is now available. It includes:
   physical error probability against logical failure rate for the
   size-two and size-three toric codes;
 * periodic-lattice visualizations with error, syndrome, and logical overlays;
-* continuous integration on Windows and Ubuntu that runs the test suite and
-  executes the committed notebooks.
+* continuous integration on Windows and Ubuntu that enforces complete line and
+  branch coverage and executes every committed notebook.
 
-All feature and infrastructure work packages from MVP-01 through MVP-09 are
-implemented. MVP-10 is the final integration, documentation, and release audit.
-The remaining work is tracked as GitHub issues and summarized in the
-[MVP and project roadmap](docs/mvp_roadmap.md). The API remains experimental.
+All MVP implementation work is present in the 0.1.0 release candidate. The
+[MVP and project roadmap](docs/mvp_roadmap.md) describes post-MVP directions,
+and [release.md](docs/release.md) records the release decisions and final
+external checks. The API remains experimental.
+
+## MVP limitations
+
+Version 0.1.0 is a correctness-oriented reference implementation for small
+codes. It intentionally does not provide:
+
+* scalable distance search or decoding;
+* threshold-scale simulation or statistical error bars;
+* correlated, circuit-level, or measurement noise;
+* repeated syndrome rounds or fault-tolerant extraction schedules;
+* quantum-hardware execution;
+* general surface-code boundaries, cup products, Khovanov-code construction,
+  or certified homology-preserving transformations;
+* API compatibility guarantees before a later stable release.
+
+## Release
+
+The release candidate version is `0.1.0`, supports Python 3.12, and is intended
+to receive the Git tag `v0.1.0` after this PR is merged and CI is green. PyPI
+publication is deferred; this release is distributed from the repository. See
+[CHANGELOG.md](CHANGELOG.md) and [docs/release.md](docs/release.md).
 
 ## License
 
@@ -292,7 +347,10 @@ This project is released under the MIT License.
 
 ## Citation
 
-A formal citation file may be added later if the project develops into a more complete research-software artifact.
+Version 0.1.0 has no DOI or `CITATION.cff`. Until an archived release exists,
+cite the repository URL, authors, version `0.1.0`, and Git tag `v0.1.0` once the
+tag is available. A formal citation file is deferred to a later research
+release.
 
 ## Project vision
 

@@ -72,7 +72,12 @@ class Face:
 
 @dataclass(frozen=True, slots=True)
 class CellComplex2D:
-    """A finite 2D cell complex suitable for binary boundary construction."""
+    """A finite 2D cell complex with explicit stable tuple ordering.
+
+    ``vertices``, ``edges``, and ``faces`` determine the bases of ``C0``,
+    ``C1``, and ``C2`` respectively. Their tuple order is preserved in every
+    derived label sequence and boundary matrix.
+    """
 
     vertices: tuple[Vertex, ...]
     edges: tuple[Edge, ...]
@@ -140,18 +145,24 @@ class CellComplex2D:
 
     @property
     def vertex_ids(self) -> tuple[str, ...]:
+        """Return vertex identifiers in ``C0`` basis order."""
+
         return tuple(vertex.id for vertex in self.vertices)
 
     @property
     def edge_ids(self) -> tuple[str, ...]:
+        """Return edge identifiers in ``C1`` basis and qubit order."""
+
         return tuple(edge.id for edge in self.edges)
 
     @property
     def face_ids(self) -> tuple[str, ...]:
+        """Return face identifiers in ``C2`` basis order."""
+
         return tuple(face.id for face in self.faces)
 
     def boundary_matrices(self) -> tuple[BinaryArray, BinaryArray]:
-        """Return ``(d1, d2)`` using the explicit cell tuple order."""
+        """Return ``(d1, d2)`` using vertex, edge, and face tuple order."""
 
         vertex_index = {label: index for index, label in enumerate(self.vertex_ids)}
         edge_index = {label: index for index, label in enumerate(self.edge_ids)}

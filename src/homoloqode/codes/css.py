@@ -39,7 +39,12 @@ def _labels(
 
 @dataclass(frozen=True, slots=True)
 class CSSSyndrome:
-    """Syndrome bits grouped by the type of check measured."""
+    """Immutable syndrome vectors in the code's check-row order.
+
+    ``x_checks[i]`` is the outcome for ``CSSCode.hx[i]`` and detects the Z
+    component of an error. ``z_checks[i]`` is the outcome for
+    ``CSSCode.hz[i]`` and detects the X component.
+    """
 
     x_checks: ArrayLike
     z_checks: ArrayLike
@@ -59,7 +64,12 @@ class CSSSyndrome:
 
 @dataclass(frozen=True, slots=True)
 class LogicalBasis:
-    """Paired CSS logical operators represented as binary row vectors."""
+    """Paired logical operators represented by binary ``(k, n)`` matrices.
+
+    Columns use the parent code's qubit order. Row ``i`` of ``x`` is paired
+    with row ``i`` of ``z`` so that ``x @ z.T`` is the identity over
+    :math:`\\mathbb F_2`.
+    """
 
     x: ArrayLike
     z: ArrayLike
@@ -86,7 +96,12 @@ class LogicalBasis:
 
 @dataclass(frozen=True, slots=True)
 class CSSCode:
-    """A CSS code defined by binary X- and Z-check matrices."""
+    """An immutable CSS code with explicit qubit and check ordering.
+
+    Columns of ``hx`` and ``hz`` follow ``qubit_labels``. Rows of ``hx``
+    follow ``x_check_labels`` and rows of ``hz`` follow ``z_check_labels``.
+    All stored arrays are validated binary, read-only copies.
+    """
 
     hx: ArrayLike
     hz: ArrayLike
@@ -151,10 +166,10 @@ class CSSCode:
         x_error: ArrayLike | None = None,
         z_error: ArrayLike | None = None,
     ) -> CSSSyndrome:
-        """Compute CSS syndromes for binary Pauli error supports.
+        """Compute syndrome vectors in X-check and Z-check row order.
 
         A Z error anticommutes with X checks, while an X error anticommutes with
-        Z checks.
+        Z checks. Error-vector positions follow ``qubit_labels``.
         """
 
         x = (
@@ -189,7 +204,7 @@ class CSSCode:
         )
 
     def logical_basis(self) -> LogicalBasis:
-        """Compute paired logical X and Z representatives over the binary field."""
+        """Compute paired logical representatives in ``qubit_labels`` order."""
 
         z_space = null_space_basis(self.hx)
         z_stabilizers = row_space_basis(self.hz)
@@ -205,4 +220,3 @@ class CSSCode:
         pairing = matmul(x_logicals, z_logicals.T)
         paired_x = matmul(inverse(pairing), x_logicals)
         return LogicalBasis(x=paired_x, z=z_logicals)
-

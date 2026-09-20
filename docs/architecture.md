@@ -65,6 +65,29 @@ The core and experiment layers have distinct responsibilities:
 
 Qiskit objects do not appear in these layers.
 
+## Ordering and X/Z conventions
+
+Public binary arrays use stable explicit orders; callers must not infer order
+from sets or reconstructed identifiers.
+
+| Object | Axis/order convention |
+|---|---|
+| `CellComplex2D` | Vertex, edge, and face tuple order defines the bases of $C_0$, $C_1$, and $C_2$ |
+| `ChainComplex2D.d1` | Rows are `c0_labels`; columns are `c1_labels` |
+| `ChainComplex2D.d2` | Rows are `c1_labels`; columns are `c2_labels` |
+| `CSSCode.hx` | Rows are `x_check_labels`; columns are `qubit_labels` |
+| `CSSCode.hz` | Rows are `z_check_labels`; columns are `qubit_labels` |
+| `PauliError` and corrections | Vector position follows `qubit_labels` |
+| `CSSSyndrome.x_checks` | Position follows `x_check_labels`; detects Z-error support through $H_Xe_Z$ |
+| `CSSSyndrome.z_checks` | Position follows `z_check_labels`; detects X-error support through $H_Ze_X$ |
+| `LogicalBasis.x` and `.z` | Columns follow `qubit_labels`; paired logical operators share a row index |
+| Qiskit syndrome results | Displayed bitstrings are reversed into check-row order before constructing `CSSSyndrome` |
+
+The top-level package exports the topology/code construction API and the
+square-toric plotting convenience function. Decoder, noise, experiment, and
+Qiskit APIs are exported from their named subpackages so their layer ownership
+remains visible at import sites.
+
 ## Cell representation
 
 Cells have stable string identifiers and an explicit tuple order. An edge is

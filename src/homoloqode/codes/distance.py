@@ -8,15 +8,15 @@ small examples (see max_qubits); not a scalable distance estimator.
 
 from dataclasses import dataclass
 from itertools import combinations
+
 import numpy as np
-from homoloqode.codes.css import CSSCode
+
 from homoloqode.algebra.gf2 import as_binary_vector, is_in_row_span, matmul
+from homoloqode.codes.css import CSSCode
 
 
 class IncompleteSearchError(ValueError):
-    """Raised when a distance search did not find a logical operator within
-    max_weight, and max_weight was set below code.n : so absence is not
-    confirmed, only "not found within the searched range"."""
+    """Raised when a bounded search cannot determine the exact distance."""
 
 
 @dataclass(frozen=True, slots=True)
@@ -70,7 +70,13 @@ def _validate_max_qubits(code: CSSCode, max_qubits: int) -> None:
         raise ValueError(f"code.n={code.n} exceeds max_qubits={max_qubits}.")
 
 
-def _search(code: CSSCode, *, check_matrix, span_matrix, max_weight: int | None) -> int | None:
+def _search(
+    code: CSSCode,
+    *,
+    check_matrix,
+    span_matrix,
+    max_weight: int | None,
+) -> int | None:
     """Search increasing-weight candidate supports for the first one that
     commutes with check_matrix and is not in the row span of span_matrix.
 
@@ -85,18 +91,25 @@ def _search(code: CSSCode, *, check_matrix, span_matrix, max_weight: int | None)
             a = np.zeros(code.n, dtype=int)
             a[list(qubits)] = 1
             a = as_binary_vector(a)
-            if np.all(matmul(check_matrix, a.reshape(-1, 1)) == 0) and not is_in_row_span(a, span_matrix):
+            commutes = np.all(matmul(check_matrix, a.reshape(-1, 1)) == 0)
+            if commutes and not is_in_row_span(a, span_matrix):
                 return weight
     if search_limit < code.n:
         raise IncompleteSearchError(
-            f"No logical operator found within max_weight={search_limit}, but code.n={code.n}; "
-            "absence is not confirmed. Increase max_weight, or omit it to search exhaustively."
+            f"No logical operator found within max_weight={search_limit}, but "
+            f"code.n={code.n}; absence is not confirmed. Increase max_weight, "
+            "or omit it to search exhaustively."
         )
     return None
 
 
-def exact_distance_x(code: CSSCode, *, max_weight: int | None = None, max_qubits: int = 24) -> int | None:
-    """Search for the exact X distance
+def exact_distance_x(
+    code: CSSCode,
+    *,
+    max_weight: int | None = None,
+    max_qubits: int = 24,
+) -> int | None:
+    """Search for the exact X distance.
 
         d_x = min{|x| : x in ker(H_Z) \\ row(H_X)}
 
@@ -121,8 +134,13 @@ def exact_distance_x(code: CSSCode, *, max_weight: int | None = None, max_qubits
     return _search(code, check_matrix=code.hz, span_matrix=code.hx, max_weight=max_weight)
 
 
-def exact_distance_z(code: CSSCode, *, max_weight: int | None = None, max_qubits: int = 24) -> int | None:
-    """Search for the exact Z distance
+def exact_distance_z(
+    code: CSSCode,
+    *,
+    max_weight: int | None = None,
+    max_qubits: int = 24,
+) -> int | None:
+    """Search for the exact Z distance.
 
         d_z = min{|z| : z in ker(H_X) \\ row(H_Z)}
 
@@ -140,8 +158,13 @@ def exact_distance_z(code: CSSCode, *, max_weight: int | None = None, max_qubits
     return _search(code, check_matrix=code.hx, span_matrix=code.hz, max_weight=max_weight)
 
 
-def exact_distance(code: CSSCode, *, max_weight: int | None = None, max_qubits: int = 24) -> "CSSDistance":
-    """Exact distance of a small CSS code, as a CSSDistance:
+def exact_distance(
+    code: CSSCode,
+    *,
+    max_weight: int | None = None,
+    max_qubits: int = 24,
+) -> CSSDistance:
+    """Return the exact distance of a small CSS code.
 
         d_x = min{|x| : x in ker(H_Z) \\ row(H_X)}
         d_z = min{|z| : z in ker(H_X) \\ row(H_Z)}

@@ -129,7 +129,7 @@ completed sequentially.
 | [MVP-07] | Noise-and-decoding experiment notebook | Implemented | Amey | MVP-06 |
 | [MVP-08] | Periodic-lattice, error, syndrome, and logical visualization | Implemented | Amey | Existing topology and CSS core |
 | [MVP-09] | Continuous integration for tests and notebooks | Implemented | Claudia | Existing tests and notebooks |
-| [MVP-10] | MVP integration, documentation, and release audit | In progress | Claudia | MVP-01 through MVP-09 |
+| [MVP-10] | MVP integration, documentation, and release audit | Release candidate | Claudia | MVP-01 through MVP-09 |
 
 ## Blocking relationships
 
@@ -145,7 +145,7 @@ MVP-05 decoder [implemented] ──┘                  │
                                       MVP-07 experiment notebook ──┐ [implemented]
                                                                    │
 MVP-03 distance [implemented] ─────────────────────────────────────┤
-MVP-08 visualization [implemented] ────────────────────────────────┼──> MVP-10 release [in progress]
+MVP-08 visualization [implemented] ────────────────────────────────┼──> MVP-10 release [candidate]
 MVP-09 CI [implemented] ───────────────────────────────────────────┘
 ```
 
@@ -154,14 +154,14 @@ Consequences:
 * MVP-01 through MVP-09 are implemented and merged.
 * MVP-07 consumes the public experiment API from MVP-06 and the visualization
   API from MVP-08; it does not reimplement their algorithms.
-* MVP-10 is the active final integration and release gate.
+* MVP-10 has completed its local integration audit. Merge review, remote CI,
+  and creation of tag `v0.1.0` are the remaining external release gates.
 
 ## Current integration plan
 
-1. Audit public APIs, ordering conventions, documentation, and tests.
-2. Validate clean installation, the complete test suite, and all notebooks.
-3. Record release metadata, limitations, and deferred work.
-4. Both collaborators review the final mathematical and software narrative.
+1. Review the release candidate and its mathematical/software narrative.
+2. Confirm Windows and Ubuntu CI on the MVP-10 pull request.
+3. Merge the pull request and create tag `v0.1.0`.
 
 ## MVP definition of done
 
