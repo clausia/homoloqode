@@ -8,6 +8,7 @@ import pytest
 import homoloqode
 from homoloqode import CSSCode, exact_distance, toric_code, exact_distance_x, exact_distance_z, IncompleteSearchError
 from homoloqode.algebra import is_in_row_span
+from homoloqode.codes.distance import _search
 
 def test_size_two_toric_distance() -> None:
     """toric_code(2) is [[8,2,2]]: d_x = d_z = d = 2."""
@@ -75,6 +76,22 @@ def test_invalid_max_weight_is_rejected(max_weight: object) -> None:
 def test_zero_max_weight_is_a_valid_but_incomplete_bound() -> None:
     with pytest.raises(IncompleteSearchError):
         exact_distance(toric_code(2), max_weight=0)
+
+
+def test_exhaustive_search_returns_none_when_no_quotient_vector_exists() -> None:
+    code = CSSCode(
+        hx=np.eye(2, dtype=np.uint8),
+        hz=np.zeros((0, 2), dtype=np.uint8),
+    )
+
+    result = _search(
+        code,
+        check_matrix=code.hz,
+        span_matrix=code.hx,
+        max_weight=None,
+    )
+
+    assert result is None
 
 
 def test_stabilizer_row_is_excluded_via_row_span() -> None:
