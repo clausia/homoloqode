@@ -139,20 +139,27 @@ one, continue directly with the installation step.
 
 ### 2. Install homoloQode
 
-From the repository root (the directory containing `pyproject.toml`), install the
-project and all required dependencies in editable mode:
+From the repository root (the directory containing `pyproject.toml`), install
+the package and its runtime dependencies in editable mode:
 
 ```bash
 python -m pip install -e .
 ```
 
-This command is independent of how the Python environment was created.
+For development, including tests, coverage measurement, and notebooks, install
+the `dev` extra instead:
 
-The package requirements are declared in `pyproject.toml`. The current minimums
-are Jupyter 1.1, Matplotlib 3.10, NumPy 2.5, Qiskit 2.5 with visualization
-support, and pytest 9.1. These are required project dependencies. Qiskit is kept
-in a separate integration layer from the mathematical core, but it is part of
-the required MVP.
+```bash
+python -m pip install -e ".[dev]"
+```
+
+These commands are independent of how the Python environment was created.
+
+The requirements are declared in `pyproject.toml`. Runtime dependencies are
+Matplotlib 3.10, NumPy 2.5, and Qiskit 2.5 with visualization support. The
+`dev` extra contains Coverage.py, IPython's Jupyter kernel, Jupyter, nbconvert,
+and pytest. Qiskit is kept in a separate integration layer from the
+mathematical core, but it is part of the required MVP.
 
 ### 3. Run a notebook
 
@@ -206,10 +213,12 @@ assert chain_complex.betti_1 == 2
 
 ### 5. Run the tests
 
-Run the test suite with:
+After installing the `dev` extra, run the test suite and enforce complete line
+and branch coverage with:
 
 ```bash
-python -m pytest
+python -m coverage run -m pytest
+python -m coverage report
 ```
 
 ## Core concepts
