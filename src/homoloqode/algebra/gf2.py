@@ -168,13 +168,16 @@ def inverse(matrix: ArrayLike) -> BinaryArray:
         pivot_row += 1
 
     return as_binary_matrix(augmented[:, column_count:], name="inverse")
+
+
 def is_in_row_span(vector: ArrayLike, matrix: ArrayLike) -> bool:
-    """Check if a vector is in the row span of a binary matrix."""
+    """Return whether a binary vector belongs to a matrix's row space."""
 
-    vector = _validated_array(vector, ndim=1, name="vector")
-    mat = _validated_array(matrix, ndim=2, name="matrix")
-    if vector.shape[0] != mat.shape[1]:
-        raise ValueError("Vector length must match matrix column count.")
-
-    augmented = np.vstack((mat, vector))
-    return rank(augmented) == rank(mat)
+    candidate = as_binary_vector(vector, name="vector")
+    rows = as_binary_matrix(matrix, name="matrix")
+    if candidate.shape[0] != rows.shape[1]:
+        raise ValueError(
+            "Vector length must match matrix column count; "
+            f"got {candidate.shape[0]} and {rows.shape[1]}."
+        )
+    return rank(np.vstack((rows, candidate))) == rank(rows)

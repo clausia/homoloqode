@@ -1,5 +1,6 @@
 """Tests for homoloqode.noise: PauliError and IndependentPauliNoise."""
 
+from dataclasses import FrozenInstanceError
 import math
 
 import numpy as np
@@ -169,6 +170,22 @@ def test_nonbinary_error_vector_is_rejected() -> None:
     """PauliError's x/z entries must be 0 or 1, nothing else."""
     with pytest.raises(ValueError, match="0 and 1"):
         PauliError(x=[0, 2, 0], z=[0, 0, 0])
+
+
+def test_pauli_error_is_deeply_immutable() -> None:
+    error = PauliError(x=[1, 0], z=[0, 1])
+
+    with pytest.raises(FrozenInstanceError):
+        error.x = np.zeros(2, dtype=np.uint8)  # type: ignore[misc]
+    with pytest.raises(ValueError, match="read-only"):
+        error.x[0] = 0
+
+
+def test_noise_configuration_is_immutable() -> None:
+    noise = IndependentPauliNoise(p_x=0.1, p_y=0.2, p_z=0.3)
+
+    with pytest.raises(FrozenInstanceError):
+        noise.p_x = 0.4  # type: ignore[misc]
 
 
 def test_weight_counts_nonidentity_qubits() -> None:

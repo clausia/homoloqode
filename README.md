@@ -12,7 +12,7 @@ Topological and homological quantum codes provide a natural bridge between algeb
 
 Many introductory quantum-computing projects implement a single known algorithm or a small code example. In contrast, **homoloQode** aims to develop a more structural and reusable framework for constructing and studying small homological quantum codes from their underlying mathematical data.
 
-The project is currently in active MVP development.
+Version 0.1.0 is the first MVP release candidate. Its API remains experimental.
 
 ## Project goals
 
@@ -57,12 +57,14 @@ Planned post-MVP directions include:
 ```text
 homoloQode/
 ├── README.md
+├── CHANGELOG.md
 ├── pyproject.toml
 ├── LICENSE
 ├── docs/
 │   ├── architecture.md
 │   ├── glossary.md
 │   ├── mvp_roadmap.md
+│   ├── release.md
 │   └── reading_notes.md
 ├── references/
 ├── notebooks/
@@ -139,20 +141,27 @@ one, continue directly with the installation step.
 
 ### 2. Install homoloQode
 
-From the repository root (the directory containing `pyproject.toml`), install the
-project and all required dependencies in editable mode:
+From the repository root (the directory containing `pyproject.toml`), install
+the package and its runtime dependencies in editable mode:
 
 ```bash
 python -m pip install -e .
 ```
 
-This command is independent of how the Python environment was created.
+For development, including tests, coverage measurement, and notebooks, install
+the `dev` extra instead:
 
-The package requirements are declared in `pyproject.toml`. The current minimums
-are Jupyter 1.1, NumPy 2.5, Qiskit 2.5 with visualization support, and pytest
-9.1. These are required project dependencies. Qiskit is kept in a separate
-integration layer from the mathematical core, but it is part of the required
-MVP.
+```bash
+python -m pip install -e ".[dev]"
+```
+
+These commands are independent of how the Python environment was created.
+
+The requirements are declared in `pyproject.toml`. Runtime dependencies are
+Matplotlib 3.10, NumPy 2.5, and Qiskit 2.5 with visualization support. The
+`dev` extra contains Coverage.py, IPython's Jupyter kernel, Jupyter, nbconvert,
+and pytest. Qiskit is kept in a separate integration layer from the
+mathematical core, but it is part of the required MVP.
 
 ### 3. Run a notebook
 
@@ -204,12 +213,46 @@ assert code.k == 2
 assert chain_complex.betti_1 == 2
 ```
 
-### 5. Run the tests
+### 5. Run an error-correction cycle
 
-Run the test suite with:
+This deterministic example creates a toric code, specifies an X error,
+computes its syndrome, decodes it, and classifies the residual:
+
+```python
+import numpy as np
+
+from homoloqode import toric_code
+from homoloqode.decoders import ResidualClass, classify_residual, decode_syndrome
+from homoloqode.noise import PauliError
+
+code = toric_code(2)
+x_support = np.zeros(code.n, dtype=np.uint8)
+x_support[0] = 1
+error = PauliError(x=x_support, z=np.zeros(code.n, dtype=np.uint8))
+
+syndrome = code.syndrome(x_error=error.x, z_error=error.z)
+correction = decode_syndrome(code, syndrome)
+residual = classify_residual(
+    code,
+    x_residual=error.x ^ correction.x_correction.support,
+    z_residual=error.z ^ correction.z_correction.support,
+)
+
+print(residual.value)  # stabilizer
+print(residual is ResidualClass.STABILIZER)  # True
+```
+
+The decoder's correction need not equal the physical error. Success means that
+their residual is a stabilizer, so it acts trivially on encoded information.
+
+### 6. Run the tests
+
+After installing the `dev` extra, run the test suite and enforce complete line
+and branch coverage with:
 
 ```bash
-python -m pytest
+python -m coverage run -m pytest
+python -m coverage report
 ```
 
 ## Core concepts
@@ -229,7 +272,7 @@ The project is organized around the following concepts:
 * **Homology classes**
 * **Toric and surface codes**
 
-A shared glossary will be developed in [`docs/glossary.md`](docs/glossary.md).
+The shared terminology is maintained in [`docs/glossary.md`](docs/glossary.md).
 
 ## Reading list
 
@@ -240,7 +283,7 @@ It includes a small set of core references on stabilizer/CSS codes, topological 
 
 ## Development status
 
-The first implementation scaffold is now available. It includes:
+The MVP implementation includes:
 
 * exact binary linear algebra over $\mathbb F_2$;
 * finite two-dimensional cell complexes;
@@ -249,6 +292,7 @@ The first implementation scaffold is now available. It includes:
 * construction and validation of $H_X$ and $H_Z$;
 * CSS syndromes and Pauli stabilizer strings;
 * paired logical $X$ and $Z$ representatives;
+* exact X, Z, and overall distance searches for small CSS codes;
 * reproducible independent Pauli noise sampling;
 * exhaustive minimum-weight decoding for small CSS codes;
 * classification of residual stabilizer successes, logical failures, and
@@ -262,15 +306,35 @@ The first implementation scaffold is now available. It includes:
 * an [experiment notebook](notebooks/03_noise_and_decoding.ipynb) sweeping
   physical error probability against logical failure rate for the
   size-two and size-three toric codes;
-* continuous integration on Windows and Ubuntu that runs the test suite and
-  executes the committed notebooks.
+* periodic-lattice visualizations with error, syndrome, and logical overlays;
+* continuous integration on Windows and Ubuntu that enforces complete line and
+  branch coverage and executes every committed notebook.
 
-The toric-code construction itself is implemented, but the complete MVP is not
-finished. Exact code-distance computation and geometric visualization are in
-review. The documented noise-and-decoding experiment notebook and final release
-audit remain to be completed. The remaining work is tracked as GitHub issues
-and summarized in the [MVP and project roadmap](docs/mvp_roadmap.md). The API
-remains experimental.
+All MVP implementation work is present in the 0.1.0 release candidate. The
+[MVP and project roadmap](docs/mvp_roadmap.md) describes post-MVP directions,
+and [release.md](docs/release.md) records the release decisions and final
+external checks. The API remains experimental.
+
+## MVP limitations
+
+Version 0.1.0 is a correctness-oriented reference implementation for small
+codes. It intentionally does not provide:
+
+* scalable distance search or decoding;
+* threshold-scale simulation or statistical error bars;
+* correlated, circuit-level, or measurement noise;
+* repeated syndrome rounds or fault-tolerant extraction schedules;
+* quantum-hardware execution;
+* general surface-code boundaries, cup products, Khovanov-code construction,
+  or certified homology-preserving transformations;
+* API compatibility guarantees before a later stable release.
+
+## Release
+
+The release candidate version is `0.1.0`, supports Python 3.12, and is intended
+to receive the Git tag `v0.1.0` after this PR is merged and CI is green. PyPI
+publication is deferred; this release is distributed from the repository. See
+[CHANGELOG.md](CHANGELOG.md) and [docs/release.md](docs/release.md).
 
 ## License
 
@@ -283,7 +347,10 @@ This project is released under the MIT License.
 
 ## Citation
 
-A formal citation file may be added later if the project develops into a more complete research-software artifact.
+Version 0.1.0 has no DOI or `CITATION.cff`. Until an archived release exists,
+cite the repository URL, authors, version `0.1.0`, and Git tag `v0.1.0` once the
+tag is available. A formal citation file is deferred to a later research
+release.
 
 ## Project vision
 

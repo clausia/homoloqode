@@ -17,10 +17,9 @@ from numpy.typing import ArrayLike
 
 from homoloqode.algebra.gf2 import (
     BinaryArray,
-    as_binary_matrix,
     as_binary_vector,
+    is_in_row_span,
     matmul,
-    rank,
 )
 from homoloqode.codes.css import CSSCode, CSSSyndrome
 
@@ -31,7 +30,7 @@ class DecodingFailure(RuntimeError):
 
 @dataclass(frozen=True, slots=True)
 class BinaryCorrection:
-    """An immutable binary correction support and its Hamming weight."""
+    """An immutable correction support in code-qubit order and its weight."""
 
     support: BinaryArray
     weight: int = field(init=False)
@@ -46,8 +45,9 @@ class BinaryCorrection:
 class CSSDecodeResult:
     """Minimum-weight X and Z corrections for a CSS syndrome.
 
-    ``x_correction`` reproduces the Z-check syndrome through ``H_Z``;
-    ``z_correction`` reproduces the X-check syndrome through ``H_X``.
+    Support positions follow ``code.qubit_labels``. ``x_correction`` reproduces
+    the Z-check syndrome through ``H_Z``; ``z_correction`` reproduces the
+    X-check syndrome through ``H_X``.
     """
 
     x_correction: BinaryCorrection
@@ -66,19 +66,6 @@ def _positive_integer(value: object, *, name: str) -> int:
     if isinstance(value, bool) or not isinstance(value, int) or value <= 0:
         raise ValueError(f"{name} must be a positive integer; got {value!r}.")
     return value
-
-
-def _is_in_row_span(vector: ArrayLike, matrix: ArrayLike) -> bool:
-    """Return whether a vector belongs to a binary matrix's row space."""
-
-    candidate = as_binary_vector(vector, name="residual support")
-    rows = as_binary_matrix(matrix, name="stabilizer checks")
-    if candidate.shape[0] != rows.shape[1]:
-        raise ValueError(
-            "Residual support length must match the stabilizer-check width; "
-            f"got {candidate.shape[0]} and {rows.shape[1]}."
-        )
-    return rank(np.vstack((rows, candidate))) == rank(rows)
 
 
 def _find_correction(
@@ -119,7 +106,8 @@ def decode_syndrome(
     X- and Z-error components are decoded independently over
     :math:`\\mathbb F_2`.  Exhaustive enumeration makes runtime exponential in
     ``code.n``; ``max_qubits`` and ``max_weight`` bound that work.  Degenerate
-    equal-weight corrections are resolved by qubit-index lexicographic order.
+    equal-weight corrections are resolved by qubit-index lexicographic order,
+    where indices follow ``code.qubit_labels``.
 
     Raises:
         ValueError: If a bound or syndrome length is invalid.
@@ -190,6 +178,6 @@ def classify_residual(
     syndrome = code.syndrome(x_error=x, z_error=z)
     if np.any(syndrome.x_checks) or np.any(syndrome.z_checks):
         return ResidualClass.INVALID
-    if _is_in_row_span(x, code.hx) and _is_in_row_span(z, code.hz):
+    if is_in_row_span(x, code.hx) and is_in_row_span(z, code.hz):
         return ResidualClass.STABILIZER
     return ResidualClass.LOGICAL

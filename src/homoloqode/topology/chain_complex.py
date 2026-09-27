@@ -34,7 +34,11 @@ def _basis_labels(
 
 @dataclass(frozen=True, slots=True)
 class ChainComplex2D:
-    """A binary chain complex ``C2 --d2--> C1 --d1--> C0``."""
+    """An ordered binary chain complex ``C2 --d2--> C1 --d1--> C0``.
+
+    Rows of ``d1`` follow ``c0_labels`` and columns follow ``c1_labels``.
+    Rows of ``d2`` follow ``c1_labels`` and columns follow ``c2_labels``.
+    """
 
     d1: ArrayLike
     d2: ArrayLike
@@ -97,7 +101,7 @@ class ChainComplex2D:
         return self.d1.shape[1] - rank(self.d1) - rank(self.d2)
 
     def to_css_code(self) -> "CSSCode":
-        """Construct the homological CSS code with qubits on ``C1``."""
+        """Construct the CSS code with qubits ordered by ``c1_labels``."""
 
         from homoloqode.codes import CSSCode
 
@@ -108,4 +112,3 @@ class ChainComplex2D:
             x_check_labels=self.c0_labels,
             z_check_labels=self.c2_labels,
         )
-

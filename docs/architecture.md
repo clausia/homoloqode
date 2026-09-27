@@ -51,7 +51,7 @@ The core and experiment layers have distinct responsibilities:
 * `homoloqode.algebra` implements exact binary linear algebra. NumPy's
   real-valued rank and solver functions are not used for these calculations.
 * `homoloqode.codes` stores abstract CSS codes and derives syndromes,
-  stabilizers, and paired logical operators.
+  stabilizers, paired logical operators, and exact small-code distances.
 * `homoloqode.decoders` consumes code objects and explicit syndromes. Its
   exhaustive decoder is a deterministic small-code reference implementation,
   with explicit guards around exponential searches.
@@ -60,8 +60,33 @@ The core and experiment layers have distinct responsibilities:
 * `homoloqode.experiments` coordinates noise, algebraic syndrome calculation,
   decoding, and residual classification without owning any of those
   algorithms.
+* `homoloqode.visualization` renders the square toric complex and optional
+  error, syndrome, and logical overlays without mutating mathematical objects.
 
 Qiskit objects do not appear in these layers.
+
+## Ordering and X/Z conventions
+
+Public binary arrays use stable explicit orders; callers must not infer order
+from sets or reconstructed identifiers.
+
+| Object | Axis/order convention |
+|---|---|
+| `CellComplex2D` | Vertex, edge, and face tuple order defines the bases of $C_0$, $C_1$, and $C_2$ |
+| `ChainComplex2D.d1` | Rows are `c0_labels`; columns are `c1_labels` |
+| `ChainComplex2D.d2` | Rows are `c1_labels`; columns are `c2_labels` |
+| `CSSCode.hx` | Rows are `x_check_labels`; columns are `qubit_labels` |
+| `CSSCode.hz` | Rows are `z_check_labels`; columns are `qubit_labels` |
+| `PauliError` and corrections | Vector position follows `qubit_labels` |
+| `CSSSyndrome.x_checks` | Position follows `x_check_labels`; detects Z-error support through $H_Xe_Z$ |
+| `CSSSyndrome.z_checks` | Position follows `z_check_labels`; detects X-error support through $H_Ze_X$ |
+| `LogicalBasis.x` and `.z` | Columns follow `qubit_labels`; paired logical operators share a row index |
+| Qiskit syndrome results | Displayed bitstrings are reversed into check-row order before constructing `CSSSyndrome` |
+
+The top-level package exports the topology/code construction API and the
+square-toric plotting convenience function. Decoder, noise, experiment, and
+Qiskit APIs are exported from their named subpackages so their layer ownership
+remains visible at import sites.
 
 ## Cell representation
 
@@ -85,6 +110,7 @@ src/homoloqode/
 ├── decoders/         deterministic reference decoders for small codes
 ├── noise/            reproducible physical Pauli noise models
 ├── experiments/      reusable trial and aggregate experiment APIs
+├── visualization/    Matplotlib views of the periodic square lattice
 ├── cohomology/       future cup products and cohomology operations
 ├── khovanov/         future graded/Khovanov chain-complex adapters
 ├── transformations/ future homology-preserving transformations
@@ -113,7 +139,9 @@ The experiment layer creates one seeded `numpy.random.Generator` per repeated
 experiment and reuses it for every trial. Aggregate results retain only
 mutually exclusive counts. Decoder exceptions, including bounded-search
 failures, propagate to the caller rather than being counted as logical
-failures. Plotting and notebook-specific analysis remain outside this layer.
+failures. Plotting remains in `homoloqode.visualization`, while parameter
+sweeps, tables, plots of aggregate results, and interpretation remain in
+notebooks.
 
 ## Extension boundaries
 
@@ -165,7 +193,7 @@ Experiments should compare at least:
 
 Preserving homology alone does not imply preservation of the physical CSS code.
 
-## Initial milestones
+## Implemented MVP milestones
 
 1. Construct and validate a periodic square cellulation.
 2. Produce $\partial_1$, $\partial_2$, $H_X$, and $H_Z$.
@@ -173,4 +201,5 @@ Preserving homology alone does not imply preservation of the physical CSS code.
    three.
 4. Compute syndromes and paired logical representatives over $\mathbb F_2$.
 5. Add Qiskit export and ideal syndrome-extraction circuits.
-6. Add small-code distance calculations and decoding experiments.
+6. Compute exact small-code distances and decode syndromes exhaustively.
+7. Run reproducible memory experiments and visualize periodic-lattice data.

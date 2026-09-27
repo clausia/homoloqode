@@ -275,6 +275,28 @@ def test_code_noise_and_decoder_are_validated() -> None:
         run_memory_trial(code, noise, rng=rng, decoder=None)  # type: ignore[arg-type]
 
 
+def test_aggregate_code_noise_and_decoder_are_validated() -> None:
+    code = toric_code(2)
+    noise = IndependentPauliNoise(p_x=0.0, p_y=0.0, p_z=0.0)
+
+    with pytest.raises(TypeError, match="code must be a CSSCode"):
+        run_memory_experiment(  # type: ignore[arg-type]
+            object(), noise, trials=1, seed=0
+        )
+    with pytest.raises(TypeError, match="noise must be"):
+        run_memory_experiment(  # type: ignore[arg-type]
+            code, object(), trials=1, seed=0
+        )
+    with pytest.raises(TypeError, match="decoder must be callable"):
+        run_memory_experiment(
+            code,
+            noise,
+            trials=1,
+            seed=0,
+            decoder=None,  # type: ignore[arg-type]
+        )
+
+
 def test_code_and_noise_are_not_mutated() -> None:
     code = toric_code(2)
     noise = IndependentPauliNoise(p_x=0.1, p_y=0.2, p_z=0.3)
@@ -307,3 +329,27 @@ def test_aggregate_result_validates_counts_and_does_not_retain_trials() -> None:
         "invalid_failures",
         "seed",
     }
+
+
+@pytest.mark.parametrize(
+    ("field_name", "value"),
+    [
+        ("stabilizer_successes", -1),
+        ("logical_failures", -1),
+        ("invalid_failures", -1),
+    ],
+)
+def test_aggregate_result_rejects_negative_counts(
+    field_name: str, value: int
+) -> None:
+    values = {
+        "trials": 1,
+        "stabilizer_successes": 1,
+        "logical_failures": 0,
+        "invalid_failures": 0,
+        "seed": 0,
+    }
+    values[field_name] = value
+
+    with pytest.raises(ValueError, match="nonnegative integer"):
+        MemoryExperimentResult(**values)

@@ -96,6 +96,7 @@ The current codebase includes:
 * code parameters $n$ and $k$ from binary ranks;
 * CSS stabilizer strings and syndrome calculations;
 * paired logical X and Z representatives;
+* exact X, Z, and overall distance searches for small CSS codes;
 * reproducible independent Pauli noise sampling;
 * exhaustive minimum-weight decoding for small CSS codes;
 * stabilizer, logical, and invalid residual classification;
@@ -105,11 +106,12 @@ The current codebase includes:
 * automated comparisons between algebraic and Qiskit syndromes;
 * an introductory boundary-map notebook;
 * an algebraic-versus-Qiskit syndrome notebook;
+* a noise-and-decoding experiment notebook;
+* periodic-lattice visualization with error, syndrome, and logical overlays;
 * automated unit tests for the implemented layers;
 * continuous integration on Windows and Ubuntu, including notebook execution.
 
-This work is represented by [MVP-01], [MVP-02], [MVP-04], [MVP-05], [MVP-06],
-and [MVP-09].
+This work is represented by [MVP-01] through [MVP-09].
 
 ## MVP work packages
 
@@ -120,53 +122,46 @@ completed sequentially.
 |---|---|---|---|---|
 | [MVP-01] | Ideal Qiskit syndrome-extraction adapter | Implemented | Claudia | Existing CSS core |
 | [MVP-02] | Algebraic-versus-Qiskit syndrome notebook | Implemented | Claudia | MVP-01 |
-| [MVP-03] | Exact X, Z, and overall distance for small CSS codes | In review | Amey | Existing GF(2) and logical-space core |
+| [MVP-03] | Exact X, Z, and overall distance for small CSS codes | Implemented | Amey | Existing GF(2) and logical-space core |
 | [MVP-04] | Reproducible independent Pauli noise model | Implemented | Amey | Existing CSS error representation |
 | [MVP-05] | Exhaustive minimum-weight CSS decoder | Implemented | Claudia | Existing GF(2) core |
 | [MVP-06] | Reusable end-to-end memory-experiment API | Implemented | Claudia | MVP-04 and MVP-05 |
-| [MVP-07] | Noise-and-decoding experiment notebook | Not started: can begin next | Amey | MVP-06 |
-| [MVP-08] | Periodic-lattice, error, syndrome, and logical visualization | In review | Amey | Existing topology and CSS core |
+| [MVP-07] | Noise-and-decoding experiment notebook | Implemented | Amey | MVP-06 |
+| [MVP-08] | Periodic-lattice, error, syndrome, and logical visualization | Implemented | Amey | Existing topology and CSS core |
 | [MVP-09] | Continuous integration for tests and notebooks | Implemented | Claudia | Existing tests and notebooks |
-| [MVP-10] | MVP integration, documentation, and release audit | Not started: blocked | Claudia | Remaining MVP feature issues |
+| [MVP-10] | MVP integration, documentation, and release audit | Release candidate | Claudia | MVP-01 through MVP-09 |
 
 ## Blocking relationships
 
 The actual dependency structure is:
 
 ```text
-MVP-01 Qiskit adapter ──> MVP-02 comparison notebook      [implemented]
+MVP-01 Qiskit adapter ──> MVP-02 comparison notebook       [implemented]
 
 MVP-04 noise [implemented] ────┐
                                ├──> MVP-06 experiment API [implemented]
 MVP-05 decoder [implemented] ──┘                  │
                                                   v
-                                      MVP-07 experiment notebook ──┐
+                                      MVP-07 experiment notebook ──┐ [implemented]
                                                                    │
-MVP-03 distance [in review] ───────────────────────────────────────┤
-MVP-08 visualization [in review] ──────────────────────────────────┼──> MVP-10 release
+MVP-03 distance [implemented] ─────────────────────────────────────┤
+MVP-08 visualization [implemented] ────────────────────────────────┼──> MVP-10 release [candidate]
 MVP-09 CI [implemented] ───────────────────────────────────────────┘
 ```
 
 Consequences:
 
-* MVP-04, MVP-05, MVP-06, and MVP-09 are implemented.
-* MVP-07 is unblocked by MVP-06 and must use its public API; experiment logic
-  should not be reimplemented in notebook cells.
-* MVP-03 and MVP-08 are in review. MVP-08 remains optional for the first version
-  of the MVP-07 notebook.
-* MVP-10 is the final integration gate and begins only after the preceding MVP
-  feature and infrastructure issues are complete.
-
-MVP-03 is useful when interpreting experimental results, but it does not block
-the initial implementation of the experiment engine.
+* MVP-01 through MVP-09 are implemented and merged.
+* MVP-07 consumes the public experiment API from MVP-06 and the visualization
+  API from MVP-08; it does not reimplement their algorithms.
+* MVP-10 has completed its local integration audit. Merge review, remote CI,
+  and creation of tag `v0.1.0` are the remaining external release gates.
 
 ## Current integration plan
 
-1. Complete review and integration of [MVP-03], [MVP-06], and [MVP-08].
-2. Amey implements [MVP-07] using the public experiment API from [MVP-06].
-3. Both review results, mathematical explanations, runtime, and limitations.
-4. Claudia coordinates [MVP-10], with Amey reviewing the final mathematical
-   narrative.
+1. Review the release candidate and its mathematical/software narrative.
+2. Confirm Windows and Ubuntu CI on the MVP-10 pull request.
+3. Merge the pull request and create tag `v0.1.0`.
 
 ## MVP definition of done
 
@@ -199,7 +194,7 @@ The first post-MVP stage extends the current toric-code assumptions:
 * rough and smooth boundary metadata;
 * relative homology;
 * additional cellulations and code families;
-* separate X and Z distance behavior;
+* scalable or approximate distance tooling beyond exact small-code search;
 * improved geometry and visualization APIs;
 * scalable decoder adapters such as PyMatching;
 * optional simulator/tool adapters such as Stim and Qiskit Aer;

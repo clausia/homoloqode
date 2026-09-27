@@ -21,6 +21,7 @@ from homoloqode.decoders import (
 )
 from homoloqode.noise import IndependentPauliNoise, PauliError
 
+
 class CSSDecoder(Protocol):
     """Callable decoder boundary used by the memory-experiment engine."""
 
@@ -34,7 +35,11 @@ class CSSDecoder(Protocol):
 
 @dataclass(frozen=True, slots=True)
 class MemoryTrialResult:
-    """Complte result of one sample, syndrome, and correction cycle."""
+    """Complete immutable result of one noise and correction cycle.
+
+    Error and correction vectors follow the code's qubit order. Syndrome
+    vectors follow its X-check and Z-check row orders.
+    """
 
     error: PauliError
     syndrome: CSSSyndrome
@@ -43,7 +48,7 @@ class MemoryTrialResult:
 
     @property
     def succeeded(self) -> bool:
-        """Whether the residual acts trivially on the encoded information"""
+        """Whether the residual acts trivially on the encoded information."""
 
         return self.residual_class is ResidualClass.STABILIZER
 
@@ -52,8 +57,9 @@ class MemoryTrialResult:
 class MemoryExperimentResult:
     """Aggregate outcomes from reproducible independent memory trials.
 
-    Individual trial results are deliberately not retained, so memory usage
-    does not grow with ``trials`` beyond the aggregate counters.
+    Outcome counts are mutually exclusive and sum to ``trials``. Individual
+    trial results are deliberately not retained, so memory usage does not grow
+    with ``trials`` beyond the aggregate counters.
     """
 
     trials: int
