@@ -129,7 +129,7 @@ completed sequentially.
 | [MVP-07] | Noise-and-decoding experiment notebook | Implemented | Amey | MVP-06 |
 | [MVP-08] | Periodic-lattice, error, syndrome, and logical visualization | Implemented | Amey | Existing topology and CSS core |
 | [MVP-09] | Continuous integration for tests and notebooks | Implemented | Claudia | Existing tests and notebooks |
-| [MVP-10] | MVP integration, documentation, and release audit | Release candidate | Claudia | MVP-01 through MVP-09 |
+| [MVP-10] | MVP integration, documentation, and release audit | Implemented | Claudia | MVP-01 through MVP-09 |
 
 ## Blocking relationships
 
@@ -145,27 +145,26 @@ MVP-05 decoder [implemented] ──┘                  │
                                       MVP-07 experiment notebook ──┐ [implemented]
                                                                    │
 MVP-03 distance [implemented] ─────────────────────────────────────┤
-MVP-08 visualization [implemented] ────────────────────────────────┼──> MVP-10 release [candidate]
+MVP-08 visualization [implemented] ────────────────────────────────┼──> MVP-10 release [implemented]
 MVP-09 CI [implemented] ───────────────────────────────────────────┘
 ```
 
 Consequences:
 
-* MVP-01 through MVP-09 are implemented and merged.
+* MVP-01 through MVP-10 are implemented.
 * MVP-07 consumes the public experiment API from MVP-06 and the visualization
   API from MVP-08; it does not reimplement their algorithms.
-* MVP-10 has completed its local integration audit. Merge review, remote CI,
-  and creation of tag `v0.1.0` are the remaining external release gates.
+* Version `0.1.0` records the completed MVP implementation and release audit.
 
-## Current integration plan
+## MVP release
 
-1. Review the release candidate and its mathematical/software narrative.
-2. Confirm Windows and Ubuntu CI on the MVP-10 pull request.
-3. Merge the pull request and create tag `v0.1.0`.
+Version `0.1.0` is the completed MVP release. It provides the reproducible
+reference platform defined by the criteria below and establishes the baseline
+for the post-MVP roadmap.
 
 ## MVP definition of done
 
-The MVP is ready for its first release when:
+The first MVP release satisfies the following criteria:
 
 * toric codes of sizes two and three are reproducibly constructed;
 * $[[n,k,d]]$ is verified for both reference examples;

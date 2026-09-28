@@ -12,7 +12,7 @@ Topological and homological quantum codes provide a natural bridge between algeb
 
 Many introductory quantum-computing projects implement a single known algorithm or a small code example. In contrast, **homoloQode** aims to develop a more structural and reusable framework for constructing and studying small homological quantum codes from their underlying mathematical data.
 
-Version 0.1.0 is the first MVP release candidate. Its API remains experimental.
+Version 0.1.0 is the first MVP release. Its API remains experimental.
 
 ## Project goals
 
@@ -310,10 +310,10 @@ The MVP implementation includes:
 * continuous integration on Windows and Ubuntu that enforces complete line and
   branch coverage and executes every committed notebook.
 
-All MVP implementation work is present in the 0.1.0 release candidate. The
+All MVP implementation work is included in release `v0.1.0`. The
 [MVP and project roadmap](docs/mvp_roadmap.md) describes post-MVP directions,
-and [release.md](docs/release.md) records the release decisions and final
-external checks. The API remains experimental.
+and [release.md](docs/release.md) records the release decisions and validation
+boundary. The API remains experimental.
 
 ## MVP limitations
 
@@ -331,10 +331,10 @@ codes. It intentionally does not provide:
 
 ## Release
 
-The release candidate version is `0.1.0`, supports Python 3.12, and is intended
-to receive the Git tag `v0.1.0` after this PR is merged and CI is green. PyPI
-publication is deferred; this release is distributed from the repository. See
-[CHANGELOG.md](CHANGELOG.md) and [docs/release.md](docs/release.md).
+Version `0.1.0` is the first homoloQode release, supports Python 3.12, and is
+available from the repository under Git tag `v0.1.0`. PyPI publication is
+deferred. See [CHANGELOG.md](CHANGELOG.md) and
+[docs/release.md](docs/release.md).
 
 ## License
 
@@ -347,10 +347,9 @@ This project is released under the MIT License.
 
 ## Citation
 
-Version 0.1.0 has no DOI or `CITATION.cff`. Until an archived release exists,
-cite the repository URL, authors, version `0.1.0`, and Git tag `v0.1.0` once the
-tag is available. A formal citation file is deferred to a later research
-release.
+Version 0.1.0 has no DOI or `CITATION.cff`. Cite the repository URL, authors,
+version `0.1.0`, and Git tag `v0.1.0`. A formal citation file is deferred to a
+later research release.
 
 ## Project vision
 

@@ -9,8 +9,7 @@ first homoloQode MVP.
 |---|---|
 | Version | `0.1.0` |
 | Supported Python | Python 3.12 |
-| Intended Git tag | `v0.1.0` |
-| Tag timing | After the MVP-10 pull request is merged and remote CI is green |
+| Git tag and GitHub release | `v0.1.0` |
 | Distribution | Repository source release; PyPI publication is deferred |
 | Citation | No DOI or `CITATION.cff` for 0.1.0; cite authors, repository URL, version, and tag |
 | API stability | Experimental; compatibility is not guaranteed before a stable release |
@@ -18,7 +17,7 @@ first homoloQode MVP.
 ## Reproducibility contract
 
 Runtime dependencies and the `dev` extra are declared in `pyproject.toml`.
-The release candidate is validated with:
+The release is validated with:
 
 ```bash
 python -m pip install -e ".[dev]"
@@ -38,9 +37,8 @@ decoding, residual classification, and experiment/visualization outputs. The
 limitations listed in the README and changelog are deliberate non-goals for
 0.1.0.
 
-## External release gates
+## Release status
 
-- Review by both collaborators.
-- Green Windows and Ubuntu jobs on the MVP-10 pull request.
-- Merge to `main`.
-- Create Git tag `v0.1.0` after the preceding checks pass.
+Version `0.1.0` is published as the first homoloQode GitHub release. It records
+the implementation and review of all ten MVP work packages, together with the
+reproducibility and documentation audit described above.
