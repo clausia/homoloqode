@@ -2,7 +2,7 @@
 
 All notable changes to homoloQode are recorded here.
 
-## 0.1.0 - Release candidate
+## 0.1.0 - 2026-09-28
 
 First minimum viable product release.
 
