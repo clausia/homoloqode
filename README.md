@@ -64,6 +64,7 @@ homoloQode/
 │   ├── architecture.md
 │   ├── glossary.md
 │   ├── mvp_roadmap.md
+│   ├── roadmap.md
 │   ├── release.md
 │   └── reading_notes.md
 ├── references/
@@ -88,9 +89,10 @@ homoloQode/
 
 The core package separates combinatorial cell data, binary chain complexes, and
 abstract CSS codes. The architectural decisions and extension boundaries are
-documented in [`docs/architecture.md`](docs/architecture.md). The current MVP,
-issue dependencies, parallel work plan, and post-MVP research directions are
-described in [`docs/mvp_roadmap.md`](docs/mvp_roadmap.md).
+documented in [`docs/architecture.md`](docs/architecture.md). The completed MVP
+and its issue dependencies are described in
+[`docs/mvp_roadmap.md`](docs/mvp_roadmap.md); the versioned research plan is in
+[`docs/roadmap.md`](docs/roadmap.md).
 
 ## Quick start
 
@@ -311,8 +313,9 @@ The MVP implementation includes:
   branch coverage and executes every committed notebook.
 
 All MVP implementation work is included in release `v0.1.0`. The
-[MVP and project roadmap](docs/mvp_roadmap.md) describes post-MVP directions,
-and [release.md](docs/release.md) records the release decisions and validation
+[MVP roadmap](docs/mvp_roadmap.md) records that milestone, the
+[project roadmap](docs/roadmap.md) describes subsequent versions, and
+[release.md](docs/release.md) records the release decisions and validation
 boundary. The API remains experimental.
 
 ## MVP limitations

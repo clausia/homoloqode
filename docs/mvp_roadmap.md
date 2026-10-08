@@ -182,135 +182,48 @@ The first MVP release satisfies the following criteria:
 
 ## Roadmap after the MVP
 
-Completing the MVP establishes a tested reference platform. The following work
-is deliberately postponed until that platform is stable.
+Release `v0.1.0` establishes the tested reference platform. Subsequent minor
+versions broaden the mathematical scope before building more experimental
+research layers:
 
-### Stage 1: Broaden the topological-code foundation
+* **`v0.2.0` — Surface codes and relative homology.** Add physical boundaries,
+  planar surface-code families, relative cycles, and boundary-aware logicals
+  and visualization.
+* **`v0.3.0` — Scalable decoding and noisy syndrome experiments.** Add decoder
+  and simulator adapters, repeated syndrome rounds, measurement noise, and
+  statistically meaningful experiments beyond exhaustive search.
+* **`v0.4.0` — Homology-preserving transformations.** Implement certified
+  changes to chain complexes and measure how they alter the physical CSS code.
+* **`v0.5.0` — Cohomology operations and logical gates.** Add restricted cup
+  products and related operations, verify their logical action, and construct
+  concrete circuits.
+* **`v0.6.0` — Graded complexes and Khovanov-related codes.** Generalize the
+  algebraic representation and reproduce small published Khovanov-code
+  constructions.
 
-The first post-MVP stage extends the current toric-code assumptions:
-
-* planar surface codes with physical boundaries;
-* rough and smooth boundary metadata;
-* relative homology;
-* additional cellulations and code families;
-* scalable or approximate distance tooling beyond exact small-code search;
-* improved geometry and visualization APIs;
-* scalable decoder adapters such as PyMatching;
-* optional simulator/tool adapters such as Stim and Qiskit Aer;
-* more realistic noise, measurement-error, and repeated-syndrome models.
-
-This stage should preserve the separation among topology, chain complexes, CSS
-codes, and external integrations.
-
-### Stage 2A: Cup products and logical gates
-
-This research track develops the cochain-level structure needed for
-cohomological logical operations:
-
-1. define ordered simplicial or cubical input with the extra data required by a
-   cup product;
-2. expose the cochain complex
-
-   $$
-   C^0\xrightarrow{\delta^0}C^1\xrightarrow{\delta^1}C^2;
-   $$
-
-3. implement a cup product for a restricted, explicit class of complexes;
-4. verify computationally that integrated products depend only on cohomology
-   classes;
-5. construct the two-copy toric-code CZ example;
-6. derive the corresponding Qiskit physical circuit;
-7. distinguish code-space preservation, constant depth, locality, and fault
-   tolerance as separate properties;
-8. later investigate preorientations and integrated Leibniz conditions for
-   more general qLDPC codes.
-
-Possible later operations include Steenrod squares, Bockstein homomorphisms,
-and related cohomology operations.
-
-### Stage 2B: Khovanov-related quantum codes
-
-This track requires a representation more general than the MVP's three-term
-complex:
-
-1. introduce a graded or bigraded chain-complex representation;
-2. record basis labels, gradings, and differentials explicitly;
-3. validate consecutive differential compositions;
-4. define an explicit adapter from a chosen three-term window or related
-   construction to a CSS code;
-5. reproduce a small published Khovanov-code example;
-6. compare physical qubits, logical qubits, check structure, and distance;
-7. investigate which Khovanov operations induce meaningful logical maps.
-
-The existing `ChainComplex2D` should remain a clear MVP abstraction rather than
-being stretched into a premature general Khovanov model.
-
-### Stage 2C: Homology-preserving transformations
-
-This track studies modifications of a complex that preserve homology while
-changing the physical realization of the code:
-
-* elementary expansions and collapses;
-* inverse-cancellation-like moves;
-* addition of redundant cells or generators;
-* chain maps and chain-homotopy certificates;
-* automated verification that homology dimensions are preserved.
-
-For every transformation, experiments should compare:
-
-* physical qubit count $n$;
-* logical qubit count $k$;
-* X and Z check counts;
-* check ranks and weights;
-* qubit participation in checks;
-* X, Z, and overall distance;
-* decoder behavior;
-* geometry and possible logical-gate structure.
-
-Preserving homology does not imply preserving the physical CSS code. Measuring
-those differences is the purpose of this research direction.
-
-### Stage 3: Comparative research and technical report
-
-After the post-MVP tracks have concrete examples:
-
-* compare code families and transformations with reproducible benchmarks;
-* study which properties are topological invariants and which depend on the
-  chosen complex;
-* compare logical operations obtained from geometry and cohomology;
-* identify results strong enough for a technical report or publication;
-* extend the existing project note with methods, experiments, limitations, and
-  open questions.
-
-The cup-product, Khovanov, and transformation tracks may proceed in parallel
-once their shared algebraic interfaces are stable.
+The detailed version goals, mathematical questions, deliverables, validation
+criteria, and non-goals are maintained in the
+[project roadmap](roadmap.md).
 
 ## Roadmap overview
 
 ```text
-MVP
- ├─ exact distance
- ├─ Pauli noise
- ├─ exhaustive decoder
- ├─ end-to-end experiment
- ├─ visualization
- └─ CI and reproducible release
-        |
-        v
-Stage 1: broader topological-code foundation
- ├─ planar boundaries and relative homology
- ├─ scalable decoder/simulator adapters
- └─ richer noise and syndrome models
-        |
-        +--------------------+-----------------------+
-        v                    v                       v
-Stage 2A                Stage 2B                 Stage 2C
-Cup products            Khovanov codes           Homology-preserving
-and logical gates       and graded complexes     transformations
-        \                    |                       /
-         +-------------------+----------------------+
-                             v
-Stage 3: comparative experiments, technical report, and research results
+v0.1.0  MVP reference platform
+   |
+   v
+v0.2.0  Surface codes and relative homology
+   |
+   v
+v0.3.0  Scalable decoding and noisy syndrome experiments
+   |
+   v
+v0.4.0  Homology-preserving transformations
+   |
+   v
+v0.5.0  Cohomology operations and logical gates
+   |
+   v
+v0.6.0  Graded complexes and Khovanov-related codes
 ```
 
 ## Keeping this roadmap current
@@ -320,8 +233,9 @@ When a GitHub issue is created, closed, split, or renumbered:
 1. update the corresponding link definition below;
 2. update the work-state table if the high-level status changed;
 3. update the dependency graph if a blocking relationship changed;
-4. keep implementation details in GitHub rather than duplicating them here;
-5. update the README only when the public project status changes materially.
+4. keep later version details in `docs/roadmap.md`;
+5. keep implementation details in GitHub rather than duplicating them here;
+6. update the README only when the public project status changes materially.
 
 [MVP-01]: https://github.com/clausia/homoloqode/issues/1
 [MVP-02]: https://github.com/clausia/homoloqode/issues/2
