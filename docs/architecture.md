@@ -168,6 +168,13 @@ Logical-gate circuits belong in an integration layer and must distinguish
 code-space preservation, constant depth, and fault tolerance as separate
 claims.
 
+The `v0.5.0` reference case is a Clifford CZ operation between two copies of
+a 2D toric code, using the existing three-term model plus the required product
+data. The three-copy 3D toric CCZ example needs additional complex data and
+products extending into degree three. It is deferred until that representation
+and its implementation scope are agreed; the general graded abstraction is
+planned for `v0.6.0`.
+
 ### Khovanov-related codes
 
 Khovanov complexes are graded and are not naturally restricted to three chain
