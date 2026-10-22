@@ -196,7 +196,8 @@ research layers:
   changes to chain complexes and measure how they alter the physical CSS code.
 * **`v0.5.0` — Cohomology operations and logical gates.** Add restricted cup
   products and related operations, with a two-copy 2D toric CZ construction
-  as the required Clifford reference case and explicit logical-action
+  as the required Clifford reference case, a two-copy
+  $\mathbb{RP}^2$ cup-product CZ comparison, and explicit logical-action
   validation.
 * **`v0.6.0` — Graded complexes and Khovanov-related codes.** Generalize the
   algebraic representation and reproduce small published Khovanov-code

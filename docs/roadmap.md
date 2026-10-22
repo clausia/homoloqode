@@ -24,6 +24,7 @@ $$
 This sequence determines which milestone we work on next. Mathematical and
 software dependencies are recorded in individual issues, while the project
 follows the sequential development policy below.
+
 The version numbers describe goals, not fixed deadlines. A version can be
 split if the mathematics or implementation turns out to need more work than
 expected.
@@ -351,6 +352,42 @@ abstraction is planned for `v0.6.0`, whose release scope remains focused on
 Khovanov-related codes. A toric CCZ implementation needs its own agreed scope
 once the required representation is available.
 
+### Comparison example
+
+The required comparison is the two-copy cup-product CZ construction
+for a homological CSS code on a fixed finite ordered triangulation of the real
+projective plane $\mathbb{RP}^2$, over $\mathbb F_2$. The triangulation, vertex
+ordering, edge-qubit labels, and degree-two fundamental cycle must be supplied
+explicitly. This is a bounded reference example using the three-term model
+and the ordinary simplicial cup product; it does not require a general
+nonorientable-surface generator.
+
+The mathematical contrast with the torus is independently known. For
+$\mathbb{RP}^2$,
+
+$$
+H^*(\mathbb{RP}^2;\mathbb F_2)=\mathbb F_2[a]/(a^3),
+\qquad |a|=1,
+\qquad \langle a\cup a,[\mathbb{RP}^2]\rangle=1.
+$$
+
+Each copy therefore encodes one logical qubit. The expected two-copy phase
+on logical bits $x,y\in\mathbb F_2$ is $(-1)^{xy}$, giving a logical CZ.
+For the torus, every degree-one class has zero cup square, and the nonzero
+pairings are between distinct basis classes. The comparison tests these
+different cohomology pairings and the resulting logical CZ couplings. It uses
+the same ordinary cup operation on a different topology.
+
+The projective plane is nonorientable, so integration here means evaluation
+on its mod-two fundamental cycle; no integral orientation is assumed. See
+[Hatcher, Section 3.2, Examples 3.7 and 3.8](https://pi.math.cornell.edu/~hatcher/AT/ATch3.pdf)
+for the surface cup products and
+[*Cups and Gates I*, Sections 2.3 and 4.1](https://arxiv.org/html/2410.16250v2)
+for the simplicial product and the passage from cohomology invariants to
+logical phases. The circuit and its logical action must be derived
+and verified in the project. Code distance and performance improvements are
+outside this comparison's acceptance criteria.
+
 ### Mathematical work
 
 - Ordered cochain complexes
@@ -389,8 +426,8 @@ input and preserved explicitly.
   operation
 - Independent verification of the logical action
 - A structured way to register and compare other cohomology operations
-- At least one comparison with a different product, operation, or topological
-  example
+- A two-copy $\mathbb{RP}^2$ cup-product CZ comparison using the specified
+  ordered triangulation and its mod-two fundamental cycle
 - A notebook deriving the mathematics and checking the circuit action
 
 ### Validation
@@ -407,7 +444,11 @@ input and preserved explicitly.
 - Repeat the reference checks for at least two small toric-code sizes
 - Reject product data that violate the required identities or invariance
   conditions
-- Validate the additional comparison example under its own stated hypotheses
+- For the $\mathbb{RP}^2$ example, verify the chain condition, CSS
+  commutation, $k=1$ per copy, and the nonzero integrated cup square
+- Verify representative invariance, joint code-space preservation, and the
+  logical CZ action for the $\mathbb{RP}^2$ circuit independently of the
+  cohomology calculation
 - Record circuit depth, connectivity, and error propagation separately from
   any fault-tolerance claim
 
@@ -426,8 +467,9 @@ Proving one of these does not automatically prove the others.
 
 The two-copy toric CZ construction has been derived, implemented, and verified
 from its cochain definition through its logical action and physical circuit.
-The required comparison example has also been validated, with assumptions and
-limitations stated clearly for each construction.
+The two-copy $\mathbb{RP}^2$ comparison has also been derived and
+validated against its known cup pairing and expected logical CZ action, with
+assumptions and limitations stated clearly for both constructions.
 
 ### Not included yet
 

@@ -175,6 +175,14 @@ products extending into degree three. It is deferred until that representation
 and its implementation scope are agreed; the general graded abstraction is
 planned for `v0.6.0`.
 
+The required comparison is a two-copy cup-product CZ on a fixed ordered
+triangulation of $\mathbb{RP}^2$ over $\mathbb F_2$. It uses the same three-term
+model with explicit simplicial product data and a mod-two fundamental cycle.
+Its nonzero degree-one cup square provides a contrast with the torus. The
+fixture does not imply general support for nonorientable-surface generation;
+its construction and validation criteria are defined in the
+[roadmap](roadmap.md#comparison-example).
+
 ### Khovanov-related codes
 
 Khovanov complexes are graded and are not naturally restricted to three chain
