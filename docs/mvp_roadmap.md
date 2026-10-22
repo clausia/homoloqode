@@ -195,8 +195,10 @@ research layers:
 * **`v0.4.0` — Homology-preserving transformations.** Implement certified
   changes to chain complexes and measure how they alter the physical CSS code.
 * **`v0.5.0` — Cohomology operations and logical gates.** Add restricted cup
-  products and related operations, verify their logical action, and construct
-  concrete circuits.
+  products and related operations, with a two-copy 2D toric CZ construction
+  as the required Clifford reference case, a two-copy
+  $\mathbb{RP}^2$ cup-product CZ comparison, and explicit logical-action
+  validation.
 * **`v0.6.0` — Graded complexes and Khovanov-related codes.** Generalize the
   algebraic representation and reproduce small published Khovanov-code
   constructions.
@@ -206,6 +208,14 @@ criteria, and non-goals are maintained in the
 [project roadmap](roadmap.md).
 
 ## Roadmap overview
+
+The diagram shows the planned development and publication order. Each version
+is a milestone containing several issues, as `v0.1.0` did. Complete, validate,
+and release each milestone before starting research, prototypes, or
+implementation for the next one. This includes individual issues for
+`v0.2.0`, `v0.3.0`, and `v0.4.0`, even when they are technically independent.
+See the [project roadmap](roadmap.md#milestones-and-sequential-development)
+for the sequential development policy and patch-release handling.
 
 ```text
 v0.1.0  MVP reference platform
@@ -220,7 +230,7 @@ v0.3.0  Scalable decoding and noisy syndrome experiments
 v0.4.0  Homology-preserving transformations
    |
    v
-v0.5.0  Cohomology operations and logical gates
+v0.5.0  Cohomology operations and logical gates (toric CZ reference)
    |
    v
 v0.6.0  Graded complexes and Khovanov-related codes
