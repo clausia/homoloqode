@@ -62,6 +62,15 @@ Link: https://arxiv.org/abs/2410.16250
 
 Purpose: Develops cohomology invariants and cup products as a systematic construction of diagonal logical gates for CSS codes, including constant-depth copy-cup gates for selected qLDPC code families.
 
+### 10. Allen Hatcher: *Algebraic Topology*, Section 3.2
+
+Link: https://pi.math.cornell.edu/~hatcher/AT/ATch3.pdf
+
+Purpose: Examples 3.7 and 3.8 give independently checkable cup products for
+closed orientable and nonorientable surfaces. They support the
+`v0.5.0` comparison between the torus and $\mathbb{RP}^2$ over $\mathbb F_2$,
+including the nonzero square of the degree-one generator on $\mathbb{RP}^2$.
+
 ## Notes
 
 PDF files are not stored in this repository. Stable arXiv links are used instead.

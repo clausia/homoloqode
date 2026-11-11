@@ -6,8 +6,8 @@ Release `v0.1.0` provides a tested reference implementation for small
 homological CSS codes. The next versions build on that foundation and move the
 project toward broader code families and original research questions.
 
-The order matters because each version prepares ideas and tools needed by the
-next one:
+The planned development and release order reflects our priorities and a
+progression toward broader research questions:
 
 $$
 \text{boundaries and relative homology}
@@ -21,9 +21,47 @@ $$
 \text{graded and Khovanov complexes}
 $$
 
+This sequence determines which milestone we work on next. Mathematical and
+software dependencies are recorded in individual issues, while the project
+follows the sequential development policy below.
+
 The version numbers describe goals, not fixed deadlines. A version can be
 split if the mathematics or implementation turns out to need more work than
 expected.
+
+## Milestones and sequential development
+
+Each version is a release milestone containing several bounded issues, with
+mathematical work, implementation, validation, documentation, and review. The
+completed `v0.1.0` MVP followed this pattern with ten issues. Later milestones
+follow the same planning model, although their size and research uncertainty
+can differ.
+
+Development proceeds one milestone at a time to keep priorities, review,
+integration, and release contents clear. Complete, validate, and release
+`v0.2.0` before starting work on `v0.3.0`, and do the same before starting
+`v0.4.0`. This policy also applies to the later milestones.
+
+Research, prototypes, implementation, and individual issues for a later
+milestone wait until the preceding milestone is released. Some tasks may be
+technically independent of earlier features; that independence does not change
+the agreed development order. Future directions remain documented here without
+becoming concurrent work streams.
+
+Each milestone has its own issue plan, acceptance criteria, documentation,
+integration review, and release audit. Agree on ownership and review
+responsibilities when creating its issues. A version groups several issues;
+it does not automatically assign the whole milestone to one collaborator.
+
+If a different priority or grouping would better serve the project, discuss
+and update the roadmap's scope, order, and numbering before starting the
+affected work. A change in direction should be an explicit planning decision.
+
+Patch releases correct an already released version without adding features
+from a later milestone. If `main` has advanced, prepare the patch from the
+affected release's tag on a maintenance branch and apply the fix to ongoing
+development where relevant. For example, `v0.2.1` is a fix to `v0.2.0`, not
+a delivery of planned `v0.3.0` features.
 
 ## What every version should include
 
@@ -144,6 +182,21 @@ reproduce the reference parameters and visualization from a clean install.
 Move beyond exhaustive small-code demonstrations. This version adds optional
 adapters for scalable decoding and stabilizer-circuit simulation while keeping
 the algebraic core independent of those tools.
+
+### Planning boundary
+
+This milestone contains two substantial work packages:
+
+1. Scalable decoding of algebraic syndromes, seeded batch experiments,
+   uncertainty intervals, and benchmarks against the exact reference path
+2. Repeated syndrome-extraction circuits, measurement and circuit-level noise,
+   detector histories, and decoding of noisy memory experiments
+
+Plan and develop these packages after `v0.2.0` has been released. The second
+builds on agreed decoder, noise, and ordering conventions. When creating
+issues, decide whether these packages should become separate sequential
+releases and update the later version numbers together if needed. Until that
+decision, both remain part of the `v0.3.0` completion criteria below.
 
 ### Mathematical and experimental work
 
@@ -288,6 +341,53 @@ operations from cup products and related cohomology operations. The main task
 is to connect a mathematical invariant to its logical action and then to a
 concrete physical circuit for a restricted example.
 
+The required reference construction is the Clifford CZ operation between two
+copies of a two-dimensional toric code. This milestone uses the existing
+three-term chain model together with explicitly supplied product structure.
+The three-copy toric CCZ example from
+[*Cups and Gates I*](https://arxiv.org/abs/2410.16250) requires a
+three-dimensional complex and products extending into degree three; that
+additional representation is outside this milestone. The general graded
+abstraction is planned for `v0.6.0`, whose release scope remains focused on
+Khovanov-related codes. A toric CCZ implementation needs its own agreed scope
+once the required representation is available.
+
+### Comparison example
+
+The required comparison is the two-copy cup-product CZ construction
+for a homological CSS code on a fixed finite ordered triangulation of the real
+projective plane $\mathbb{RP}^2$, over $\mathbb F_2$. The triangulation, vertex
+ordering, edge-qubit labels, and degree-two fundamental cycle must be supplied
+explicitly. This is a bounded reference example using the three-term model
+and the ordinary simplicial cup product; it does not require a general
+nonorientable-surface generator.
+
+The mathematical contrast with the torus is independently known. For
+$\mathbb{RP}^2$,
+
+$$
+H^*(\mathbb{RP}^2;\mathbb F_2)=\mathbb F_2[a]/(a^3),
+\qquad |a|=1,
+\qquad \langle a\cup a,[\mathbb{RP}^2]\rangle=1.
+$$
+
+Each copy therefore encodes one logical qubit. The expected two-copy phase
+on logical bits $x,y\in\mathbb F_2$ is $(-1)^{xy}$, giving a logical CZ.
+For the torus, every degree-one class has zero cup square, and the nonzero
+pairings are between distinct basis classes. The comparison tests these
+different cohomology pairings and the resulting logical CZ couplings. It uses
+the same ordinary cup operation on a different topology.
+
+The projective plane is nonorientable, so integration here means evaluation
+on its mod-two fundamental cycle; no integral orientation is assumed. See
+[Hatcher, Section 3.2, Examples 3.7 and 3.8](https://pi.math.cornell.edu/~hatcher/AT/ATch3.pdf)
+for the surface cup products and
+[*Cups and Gates I*, Sections 2.3 and 4.1](https://arxiv.org/html/2410.16250v2)
+for the simplicial product and the passage from cohomology invariants to
+logical phases. The circuit and its logical action must be derived
+and verified in the project. Code distance and performance improvements are
+outside this comparison's acceptance criteria.
+
 ### Mathematical work
 
 - Ordered cochain complexes
@@ -326,9 +426,31 @@ input and preserved explicitly.
   operation
 - Independent verification of the logical action
 - A structured way to register and compare other cohomology operations
-- At least one comparison with a different product, operation, or topological
-  example
+- A two-copy $\mathbb{RP}^2$ cup-product CZ comparison using the specified
+  ordered triangulation and its mod-two fundamental cycle
 - A notebook deriving the mathematics and checking the circuit action
+
+### Validation
+
+- Verify the chosen product's cochain identities, including the required
+  Leibniz rule or integrated form
+- Verify that integrated products are unchanged when cocycle representatives
+  are shifted by coboundaries in either code copy
+- Compute the bilinear phase on an explicitly ordered logical basis and check
+  that it gives the intended logical CZ couplings
+- Verify independently that the physical circuit preserves the joint code
+  space and implements that logical action, for example by conjugating
+  stabilizers and logical Pauli operators
+- Repeat the reference checks for at least two small toric-code sizes
+- Reject product data that violate the required identities or invariance
+  conditions
+- For the $\mathbb{RP}^2$ example, verify the chain condition, CSS
+  commutation, $k=1$ per copy, and the nonzero integrated cup square
+- Verify representative invariance, joint code-space preservation, and the
+  logical CZ action for the $\mathbb{RP}^2$ circuit independently of the
+  cohomology calculation
+- Record circuit depth, connectivity, and error propagation separately from
+  any fault-tolerance claim
 
 ### Claims that must remain separate
 
@@ -343,13 +465,17 @@ Proving one of these does not automatically prove the others.
 
 ### Complete when
 
-At least one nontrivial cohomological phase construction has been derived,
-implemented, and verified from its cochain definition through its logical
-action and physical circuit, with assumptions and limitations stated clearly.
+The two-copy toric CZ construction has been derived, implemented, and verified
+from its cochain definition through its logical action and physical circuit.
+The two-copy $\mathbb{RP}^2$ comparison has also been derived and
+validated against its known cup pairing and expected logical CZ action, with
+assumptions and limitations stated clearly for both constructions.
 
 ### Not included yet
 
 - A universal fault-tolerant gate set
+- The three-copy 3D toric CCZ construction or a general non-Clifford gate
+  framework
 - Arbitrary cup products on every `CellComplex2D`
 - Unsupported fault-tolerance claims
 - Every operation identified in the literature
@@ -450,7 +576,9 @@ When planning a version:
 
 1. Confirm that the mathematical prerequisites are ready
 2. Split the work into bounded GitHub issues with acceptance criteria
-3. Record dependencies and decide ownership with the collaborators
+3. Record dependencies within the active milestone and agree on ownership and
+   review responsibilities
 4. Separate required release outcomes from exploratory questions
-5. Split a version when evidence shows that a question needs its own release
+5. Split a version when evidence shows that a question needs its own release,
+   agreeing on any changes to scope, numbering, and publication order
 6. Keep implementation details in issues rather than duplicating them here

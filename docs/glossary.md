@@ -1,6 +1,6 @@
 # Glossary
 
-This glossary collects working definitions for the main mathematical and quantum-information concepts used in **homoloQode**. The goal is not to write exhaustive textbook entries, but to agree on precise, project-specific definitions that both collaborators can refine as the project develops.
+This glossary collects working definitions for the main mathematical and quantum-information concepts used in **homoloQode**. The goal is not to write exhaustive textbook entries, but to agree on precise, project-specific definitions that can be refined as the project develops.
 
 Unless stated otherwise, chain groups, vector spaces, and matrices in the project are defined over the binary field $\mathbb F_2$. The notation for $X$- and $Z$-type checks follows the convention described in the **Homological CSS code** entry.
 

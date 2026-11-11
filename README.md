@@ -339,6 +339,10 @@ available from the repository under Git tag `v0.1.0`. PyPI publication is
 deferred. See [CHANGELOG.md](CHANGELOG.md) and
 [docs/release.md](docs/release.md).
 
+## Acknowledgements
+
+We thank [Quantum Formalism](https://www.quantumformalism.com/) for facilitating the introduction between the collaborators and for supporting the collaboration that led to homoloQode.
+
 ## License
 
 This project is released under the MIT License.
